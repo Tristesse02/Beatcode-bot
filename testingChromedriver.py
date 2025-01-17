@@ -75,7 +75,7 @@ class LeetCodeScraper:
                 tab.click()
                 break
 
-    def extract_code(self):
+    def extract_code_type_bg3(self):
         """
         Extract the code content from the selected tab.
 
@@ -93,6 +93,18 @@ class LeetCodeScraper:
             By.CSS_SELECTOR, "code.language-python"
         )
         return code_section.get_attribute("innerText")
+
+    def extract_code_type_fontMenlo(self):
+        code_container = self.wait.until(
+            EC.presence_of_element_located(
+                (
+                    By.CSS_SELECTOR,
+                    "code.language-ruby",
+                )
+            )
+        )
+
+        return code_container.get_attribute("innerText")
 
     def close(self):
         """
@@ -119,13 +131,15 @@ if __name__ == "__main__":
         print("Solution Links:", solution_links)
 
         # Navigate to a specific solution (e.g., the third link)
-        scraper.navigate_to_solution(solution_links[3])
+        scraper.navigate_to_solution(solution_links[8])
 
-        # Select the Python tab
-        scraper.select_language_tab(language="Python")
+        code = scraper.extract_code_type_fontMenlo()
 
-        # Extract and print the code
-        code = scraper.extract_code()
+        # # Select the Python tab
+        # scraper.select_language_tab(language="Python")
+
+        # # Extract and print the code
+        # code = scraper.extract_code_type_bg3()
         print("Extracted Code:")
         print(code)
 
