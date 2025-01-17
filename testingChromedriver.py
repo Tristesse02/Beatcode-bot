@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from dotenv import load_dotenv
 
 from selenium import webdriver
@@ -19,6 +20,18 @@ class LeetCodeScraper:
         """
         self.driver = webdriver.Chrome(service=Service(driver_path))
         self.wait = WebDriverWait(self.driver, wait_time)
+
+    def load_json_file(self, filename):
+        """
+        Load data from a JSON file, returning an empty dictionary if the file does not exist or is empty.
+        """
+        if not os.path.exists(filename) or os.stat(filename).st_size == 0:
+            return (
+                {}
+            )  # Return an empty dictionary if the file doesn't exist or is empty
+
+        with open(filename, "r") as file:
+            return json.load(file)  # Load the JSON content
 
     def open_page(self, url):
         """
@@ -66,6 +79,7 @@ class LeetCodeScraper:
         for tab in language_tabs:
             if language in tab.text:
                 tab.click()
+                time.sleep(1)
                 break
 
     def extract_code_type_bg3(self):
@@ -91,16 +105,56 @@ class LeetCodeScraper:
         return code_section.get_attribute("innerText")
 
     def extract_code_type_fontMenlo(self):
-        code_container = self.wait.until(
-            EC.presence_of_element_located(
-                (
-                    By.CSS_SELECTOR,
-                    "code.language-ruby",
+        """
+        Extract code from elements where the class starts with 'language-' (e.g., language-ruby, language-sql).
+
+        :return: The code content as a string if it's Python; otherwise, return an empty string.
+        """
+        try:
+            # Locate the element with a class starting with 'language-'
+            code_container = self.wait.until(
+                EC.presence_of_element_located(
+                    (
+                        By.CSS_SELECTOR,
+                        "code[class^='language-']",  # Match any class that starts with 'language-'
+                    )
                 )
             )
-        )
+            code = code_container.get_attribute("innerText")
 
-        return code_container.get_attribute("innerText")
+            # Perform a quick check to validate if the code is Python
+            if self.is_python_code(code):
+                return code
+            else:
+                print("Extracted code is not Python. Returning an empty string.")
+                return ""  # Return an empty string instead of raising an exception
+        except Exception as e:
+            print(f"Failed to extract code. Error: {e}")
+            return ""  # Return an empty string on any exception
+
+    def filter_by_language(self, language="Python"):
+        try:
+            parent_container = self.wait.until(
+                EC.presence_of_element_located(
+                    (
+                        By.CSS_SELECTOR,
+                        "div.flex.w-full.items-start.gap-2.pr-6.overflow-hidden",
+                    )
+                )
+            )
+
+            language_tags = parent_container.find_elements(
+                By.CSS_SELECTOR, "span.inline-flex.cursor-pointer.items-center"
+            )
+
+            for tag in language_tags:
+                if language in tag.text:
+                    tag.click()
+                    time.sleep(1)
+                    return
+
+        except Exception as e:
+            print(f"Failed to extract using `filter_by_language`. Error: {e}")
 
     def close(self):
         """
@@ -117,13 +171,14 @@ class LeetCodeScraper:
         """
         try:
             # Open the problem page
-            scraper.open_page(url)
+            scraper.open_page(f"{url}solutions/")
 
             solution_links = scraper.get_solution_links()
 
             print("Solution Links:", solution_links)
 
             # Navigate to a specific solution (e.g., the third link)
+            scraper.filter_by_language("Python")
             scraper.navigate_to_solution(solution_links[link])
 
             try:
@@ -142,15 +197,14 @@ class LeetCodeScraper:
                     )
                     print("No code extracted.")
                     raise
-
-            code = scraper.extract_code_type_bg3()
+            
             print("Extracted Code:")
             print(code)
+            return code
 
-        finally:
-            scraper.close()
-
-        return code
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return ""
 
     def save_solution_to_file(self, filename, problem_name, language, code):
         """
@@ -161,13 +215,7 @@ class LeetCodeScraper:
         :param language: Language of the solution.
         :param code: The solution code.
         """
-        try:
-            with open(filename, "r") as file:
-                data = json.load(file)
-                data.append({"language": language, "code": code})
-
-        except FileNotFoundError:  # Hardly speaking we will get this error
-            data = {}
+        data = self.load_json_file(filename)
 
         if problem_name in data:
             existing_solutions = data[problem_name]["solutions"]
@@ -185,6 +233,16 @@ class LeetCodeScraper:
             json.dump(data, file, indent=4)
         print(f"Solution saved to {problem_name} in {language}.")
 
+    def is_python_code(self, code):
+        python_keywords = ["def", "import", "self", "class", "return", "lambda"]
+        python_syntax = [":", "    "]
+
+        if any(keyword in code for keyword in python_keywords) and any(
+            syntax in code for syntax in python_syntax
+        ):
+            return True
+        return False
+
 
 if __name__ == "__main__":
     load_dotenv()
@@ -195,7 +253,34 @@ if __name__ == "__main__":
     # Initialize the LeetCodeScraper
     scraper = LeetCodeScraper(driver_path=chrome_driver_path, wait_time=10)
 
-    url = "https://leetcode.com/problems/two-sum/solutions/"
-    link_index = 1
-    code = scraper.run_scrapper(url, link_index)
-    scraper.save_solution_to_file("solutions.json", "Two Sum", "Python", code)
+    # url = "https://leetcode.com/problems/longest-common-prefix/"
+    # link_index = 2
+    # code = scraper.run_scrapper(url, link_index)
+    # scraper.save_solution_to_file(
+    #     "solutions.json", "Longest Common Prefix", "Python", code
+    # )
+
+    # scraper.close()
+
+    # # Load the JSON file
+    try:
+        with open("combined.json", "r") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError("File not found")
+
+    # print(len(data))
+    try:
+        for problem in data:
+            problem_name = problem["title"]
+            problem_url = problem["source"]
+
+            for idx in range(1, 3):
+                code = scraper.run_scrapper(problem_url, idx)
+                scraper.save_solution_to_file(
+                    "solutions.json", problem_name, "Python", code
+                )
+                time.sleep(4)
+    finally:
+        # Close the browser
+        scraper.close()
