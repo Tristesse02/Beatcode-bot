@@ -4,6 +4,1078 @@
             {
                 "language": "Python",
                 "code": "class Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        n = len(nums)\n        for i in range(n - 1):\n            for j in range(i + 1, n):\n                if nums[i] + nums[j] == target:\n                    return [i, j]\n        return []  # No solution found\n"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        pair_idx = {}\n\n        for i, num in enumerate(nums):\n            if target - num in pair_idx:\n                return [i, pair_idx[target - num]]\n            pair_idx[num] = i"
+            }
+        ]
+    },
+    "Palindrome Number": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isPalindrome(self, x: int) -> bool:\n        if x < 0:\n            return False\n\n        reversed_num = 0\n        temp = x\n\n        while temp != 0:\n            digit = temp % 10\n            reversed_num = reversed_num * 10 + digit\n            temp //= 10\n\n        return reversed_num == x\n"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isPalindrome(self, x: int) -> bool:\n        if x < 0:\n            return False\n\n        reverse = 0\n        xcopy = x\n\n        while x > 0:\n            reverse = (reverse * 10) + (x % 10)\n            x //= 10\n        \n        return reverse == xcopy"
+            }
+        ]
+    },
+    "Longest Common Prefix": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def longestCommonPrefix(self, strs: List[str]) -> str:\n        pref = strs[0]\n        pref_len = len(pref)\n\n        for s in strs[1:]:\n            while pref != s[0:pref_len]:\n                pref_len -= 1\n                if pref_len == 0:\n                    return \"\"\n                \n                pref = pref[0:pref_len]\n        \n        return pref"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def longestCommonPrefix(self, v: List[str]) -> str:\n        ans=\"\"\n        v=sorted(v)\n        first=v[0]\n        last=v[-1]\n        for i in range(min(len(first),len(last))):\n            if(first[i]!=last[i]):\n                return ans\n            ans+=first[i]\n        return ans \n"
+            }
+        ]
+    },
+    "Valid Parentheses": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isValid(self, s: str) -> bool:\n        stack = []\n        mapping = {\")\":\"(\", \"}\":\"{\", \"]\":\"[\"}\n\n        for char in s:\n            if char in mapping.values():\n                stack.append(char)\n            elif char in mapping.keys():\n                if not stack or mapping[char] != stack.pop():\n                    return False\n        \n        return not stack"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isValid(self, s: str) -> bool:\n        stack = []\n        pairs = {')': '(', ']': '[', '}': '{'}\n        for c in s:\n            if c in \"([{\":\n                stack.append(c)\n            else:\n                if not stack or stack[-1] != pairs[c]:\n                    return False\n                stack.pop()\n        return not stack"
+            }
+        ]
+    },
+    "Find the Index of the First Occurrence in a String": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def strStr(self, haystack, needle):\n        for i in range(len(haystack) - len(needle) + 1):\n            if haystack[i:i+len(needle)] == needle:\n                return i\n        return -1"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def strStr(self, haystack: str, needle: str) -> int:\n\n        if len(haystack) < len(needle):\n            return -1\n\n        for i in range(len(haystack)):\n            if haystack[i:i+len(needle)] == needle:\n                return i\n\n        return -1 "
+            }
+        ]
+    },
+    "Search Insert Position": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def searchInsert(self, nums: List[int], target: int) -> int:\n        left = 0\n        right = len(nums) - 1\n\n        while left <= right:\n            mid = (left + right) // 2\n\n            if nums[mid] == target:\n                return mid\n            elif nums[mid] > target:\n                right = mid - 1\n            else:\n                left = mid + 1\n        \n        return left"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int searchInsert(vector<int>& nums, int target) {\n        int low=0;\n        int high=nums.size();\n        int mid;\n        if(target>nums[high-1]){\n            return high;\n        }\n        while(low<=high){\n              mid=(low+high)/2;\n            if(nums[mid]==target){  \n                return mid;\n            }\n          \n            if(target<nums[mid]){     \n            high=mid-1;    \n            }else{\n            low=mid+1;        \n            }\n          \n        }\n         return  low;   \n    }\n};"
+            }
+        ]
+    },
+    "Length of Last Word": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def lengthOfLastWord(self, s: str) -> int:                \n        end = len(s) - 1\n\n        while s[end] == \" \":\n            end -= 1\n        \n        start = end\n        while start >= 0 and s[start] != \" \":\n            start -= 1\n        \n        return end - start"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n\n    /**\n     * @param String $s\n     * @return Integer\n     */\n    function lengthOfLastWord($s) {\n        $words = explode(\" \", trim($s));\n        return strlen(end($words));        \n    }\n}"
+            }
+        ]
+    },
+    "Plus One": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def plusOne(self, digits: List[int]) -> List[int]:\n\n        for i in range(len(digits) - 1, -1, -1):\n\n            if digits[i] + 1 != 10:\n                digits[i] += 1\n                return digits\n            \n            digits[i] = 0\n\n            if i == 0:\n                return [1] + digits"
+            },
+            {
+                "language": "Python",
+                "code": ""
+            }
+        ]
+    },
+    "Add Binary": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n  def addBinary(self, a: str, b: str) -> str:\n    s = []\n    carry = 0\n    i = len(a) - 1\n    j = len(b) - 1\n\n    while i >= 0 or j >= 0 or carry:\n      if i >= 0:\n        carry += int(a[i])\n        i -= 1\n      if j >= 0:\n        carry += int(b[j])\n        j -= 1\n      s.append(str(carry % 2))\n      carry //= 2\n\n    return ''.join(reversed(s))"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def addBinary(self, a: str, b: str) -> str:\n        carry = 0\n        res = []\n        \n        idxA, idxB = len(a) - 1, len(b) - 1\n        \n        while idxA >= 0 or idxB >= 0 or carry == 1:\n            if idxA >= 0:\n                carry += int(a[idxA])\n                idxA -= 1            \n            if idxB >= 0:\n                carry += int(b[idxB])\n                idxB -= 1            \n\n            res.append(str(carry % 2))\n            carry = carry // 2\n            \n        return \"\".join(res[::-1])"
+            }
+        ]
+    },
+    "Climbing Stairs": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def climbStairs(self, n: int) -> int:\n        if n <= 3: return n\n\n        prev1 = 3\n        prev2 = 2\n        cur = 0\n\n        for _ in range(3, n):\n            cur = prev1 + prev2\n            prev2 = prev1\n            prev1 = cur\n        \n        return cur"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def climbStairs(self, n: int) -> int:\n        if n == 0 or n == 1:\n            return 1\n        return self.climbStairs(n-1) + self.climbStairs(n-2)"
+            }
+        ]
+    },
+    "Best Time to Buy and Sell Stock": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def maxProfit(self, prices: List[int]) -> int:\n        buy_price = prices[0]\n        profit = 0\n\n        for p in prices[1:]:\n            if buy_price > p:\n                buy_price = p\n            \n            profit = max(profit, p - buy_price)\n        \n        return profit"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def maxProfit(self, prices):\n        buy = prices[0]\n        profit = 0\n        for i in range(1, len(prices)):\n            if prices[i] < buy:\n                buy = prices[i]\n            elif prices[i] - buy > profit:\n                profit = prices[i] - buy\n        return profit"
+            }
+        ]
+    },
+    "Valid Palindrome": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isPalindrome(self, s: str) -> bool:\n        s = ''.join(c.lower() for c in s if c.isalnum())\n        left = 0 \n        right = len(s) - 1\n\n        while left < right:\n            if s[left] != s[right]:\n                return False\n            left += 1\n            right -= 1\n\n        return True"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public boolean isPalindrome(String s) {\n        if (s.isEmpty()) {\n        \treturn true;\n        }\n        int start = 0;\n        int last = s.length() - 1;\n        while(start <= last) {\n        \tchar currFirst = s.charAt(start);\n        \tchar currLast = s.charAt(last);\n        \tif (!Character.isLetterOrDigit(currFirst )) {\n        \t\tstart++;\n        \t} else if(!Character.isLetterOrDigit(currLast)) {\n        \t\tlast--;\n        \t} else {\n        \t\tif (Character.toLowerCase(currFirst) != Character.toLowerCase(currLast)) {\n        \t\t\treturn false;\n        \t\t}\n        \t\tstart++;\n        \t\tlast--;\n        \t}\n        }\n        return true;\n    }\n}\n"
+            }
+        ]
+    },
+    "Excel Sheet Column Title": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def convertToTitle(self, columnNumber: int) -> str:\n        res = \"\"\n\n        while columnNumber > 0:\n            columnNumber -= 1\n            res = chr((columnNumber % 26) + ord(\"A\")) + res\n            columnNumber //= 26\n        \n        return res"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    char getCell(int cNum )\n    {\n        return static_cast<char> (65+cNum -1);\n    }\n\n    string convertToTitle(int columnNumber)\n    {\n        string cell;\n        if( columnNumber <= 26)\n        {\n            cell = getCell(columnNumber);\n        }\n        else\n        {\n            while( columnNumber > 0)\n            {\n                int fr = (columnNumber -1) % 26;\n                cell.push_back(getCell(fr+1));\n                columnNumber = (columnNumber-1) / 26;\n            }\n        }\n        reverse(cell.begin(), cell.end());\n\n        return cell;\n    }\n};"
+            }
+        ]
+    },
+    "Happy Number": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n\n    public boolean isHappy(int n) {\n\n        int slower = n, faster = n;\n\n        do {\n            slower = square(slower);\n            faster = square(square(faster));\n        } while (slower != faster);\n\n        return slower == 1;\n\n    }\n\n    public int square(int n) {\n        \n        int sum = 0;\n\n        while (n > 0) {\n            int lastVal = n % 10;\n            sum += lastVal * lastVal;\n            n /= 10;\n        }\n\n        return sum;\n\n    }\n\n}"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isHappy(self, n: int) -> bool:    \n        visit = set()\n        \n        def get_next_number(n):    \n            output = 0\n            \n            while n:\n                digit = n % 10\n                output += digit ** 2\n                n = n // 10\n            \n            return output\n\n        while n not in visit:\n            visit.add(n)\n            n = get_next_number(n)\n            if n == 1:\n                return True\n        \n        return False"
+            }
+        ]
+    },
+    "Isomorphic Strings": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isIsomorphic(self, s: str, t: str) -> bool:\n        char_index_s = {}\n        char_index_t = {}\n\n        for i in range(len(s)):\n            if s[i] not in char_index_s:\n                char_index_s[s[i]] = i\n\n            if t[i] not in char_index_t:\n                char_index_t[t[i]] = i\n            \n            if char_index_s[s[i]] != char_index_t[t[i]]:\n                return False\n\n        return True"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public boolean isIsomorphic(String s, String t) {\n        // Create arrays to store the index of characters in both strings\n        int[] indexS = new int[200]; // Stores index of characters in string s\n        int[] indexT = new int[200]; // Stores index of characters in string t\n        \n        // Get the length of both strings\n        int len = s.length();\n        \n        // If the lengths of the two strings are different, they can't be isomorphic\n        if(len != t.length()) {\n            return false;\n        }\n        \n        // Iterate through each character of the strings\n        for(int i = 0; i < len; i++) {\n            // Check if the index of the current character in string s\n            // is different from the index of the corresponding character in string t\n            if(indexS[s.charAt(i)] != indexT[t.charAt(i)]) {\n                return false; // If different, strings are not isomorphic\n            }\n            \n            // Update the indices of characters in both strings\n            indexS[s.charAt(i)] = i + 1; // updating index of current character\n            indexT[t.charAt(i)] = i + 1; // updating index of current character\n        }\n        \n        // If the loop completes without returning false, strings are isomorphic\n        return true;\n    }\n}\n\n"
+            }
+        ]
+    },
+    "Contains Duplicate II": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:\n        seen = {}\n\n        for i, val in enumerate(nums):\n            if val in seen and i - seen[val] <= k:\n                return True\n            else:\n                seen[val] = i\n        \n        return False"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public boolean containsNearbyDuplicate(int[] nums, int k) {\n        \n        Map<Integer, Integer> map = new HashMap<>();\n\n        for (int i = 0; i < nums.length; i++) {\n            if (map.containsKey(nums[i]) && i - map.get(nums[i]) <= k) {\n                return true;\n            } else {\n                map.put(nums[i], i);\n            }\n        }\n\n        return false;\n    }\n}"
+            }
+        ]
+    },
+    "Summary Ranges": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public List<String> summaryRanges(int[] nums) {\n        int left = 0, right = 0;\n        List<String> result = new ArrayList();\n        while (right < nums.length) {\n            while (right < nums.length - 1 && nums[right + 1] - nums[right] == 1) \n                right++;\n            if (left != right)\n                result.add(String.valueOf(nums[left]) + \"->\" + String.valueOf(nums[right]));\n            else\n                result.add(String.valueOf(nums[left]));\n            right++;\n            left = right;\n        }\n        return result;\n    }\n}"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public List<String> summaryRanges(int[] nums) {\n        \n        List<String> strings = new ArrayList<>();\n\n        int i = 0;\n        while (i < nums.length) {\n\n            StringBuilder builder = new StringBuilder(String.valueOf(nums[i]));\n            \n            int j = i + 1;\n            while (j < nums.length && nums[j] - nums[j - 1] == 1) {\n                j++;\n            }\n\n            if (j - 1 != i) {\n                builder.append(\"->\").append(String.valueOf(nums[j - 1]));\n            }\n\n            strings.add(builder.toString());\n            i = j;\n        }\n\n        return strings;\n    }\n}"
+            }
+        ]
+    },
+    "Power of Two": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isPowerOfTwo(self, n: int) -> bool:\n        for i in range(31):\n            ans = 2 ** i\n            if ans == n:\n                return True\n        return False"
+            },
+            {
+                "language": "Python",
+                "code": ""
+            }
+        ]
+    },
+    "Ugly Number": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isUgly(self, n: int) -> bool:\n# So, by this definition, a number is ugly if you can repeatedly divide it (exactly) by 2, then 3, then 5, and the sequence of values ends at 1.\n        if n <= 0:\n            return False\n            \n        while n%2 == 0:\n            n//=2\n        while n%3 == 0:\n            n//=3\n        while n%5 == 0:\n            n//=5\n        if n == 1:\n            return True\n          \n        return False"
+            },
+            {
+                "language": "Python",
+                "code": "for (int i=2; i<6 && num; i++)\n    while (num % i == 0)\n        num /= i;\nreturn num == 1;"
+            }
+        ]
+    },
+    "Word Pattern": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public boolean wordPattern(String pattern, String s) {\n\n        HashMap<Character, String> map = new HashMap<>();\n        char[] patternArr = pattern.toCharArray();\n        String[] sArr = s.split(\" \");\n\n        if (patternArr.length != sArr.length) {\n            return false;\n        }\n\n        for (int i = 0; i < patternArr.length; i++) {\n            if (map.containsKey(patternArr[i])) {\n                if (!map.get(patternArr[i]).equals(sArr[i])) {\n                    return false;\n                }\n            } else if (map.containsValue(sArr[i])) {\n                return false;\n            } else {\n                map.put(patternArr[i], sArr[i]);\n            }\n        }\n        \n        return true;\n    }\n}"
+            },
+            {
+                "language": "Python",
+                "code": "use std::collections::{HashMap, HashSet};\n\nimpl Solution {\n    pub fn word_pattern(pattern: String, s: String) -> bool {\n        let mut pattern_map = HashMap::with_capacity(pattern.len());\n        let mut seen_words = HashSet::with_capacity(pattern.len());\n\n        let pattern_byte = pattern.as_bytes();\n        let s_words = s.split_whitespace().collect::<Vec<_>>();\n\n        if pattern_byte.len() != s_words.len() {\n            return false;\n        }\n\n        for i in 0..pattern_byte.len() {\n            if let Some(mapped_word) = pattern_map.get(&pattern_byte[i]) {\n                if *mapped_word != s_words[i] {\n                    return false;\n                }\n            } else {\n                if seen_words.contains(s_words[i]) {\n                    return false;\n                }\n                pattern_map.insert(pattern_byte[i], s_words[i]);\n                seen_words.insert(s_words[i]);\n            }\n        }\n        true\n    }\n}"
+            }
+        ]
+    },
+    "Nim Game": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "public boolean canWinNim(int n) {    \n    return n % 4 != 0 ;\n}"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution(object):\n    def canWinNim(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: bool\n        \"\"\"\n        if n%4==0:\n            return False\n        return True\n        "
+            }
+        ]
+    },
+    "Power of Three": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    bool isPowerOfThree(int n) {\n        return (n > 0 && 1162261467 % n == 0);\n// the largest power of three within 32 bits signed interger is 3 ^ 19 = 1162261467\n    }\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    bool isPowerOfThree(int n) {\n        if (n <= 0) return false;\n        while (n % 3 == 0) {\n            n /= 3;\n        }\n        return n == 1;\n    }\n};"
+            }
+        ]
+    },
+    "Power of Four": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isPowerOfFour(self, n: int) -> bool:\n        if n <= 0:\n            return False\n            \n        return math.log(n, 4).is_integer()"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public boolean isPowerOfFour(int n) {\n        if(n==1) return true;\n        else if(n%4!=0 || n==0) return false;\n        return isPowerOfFour(n/4);\n    }\n}"
+            }
+        ]
+    },
+    "Reverse Vowels of a String": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution(object):\n    def reverseVowels(self, s):\n        # Convert the input string to a character array.\n        word = list(s)\n        start = 0\n        end = len(s) - 1\n        vowels = \"aeiouAEIOU\"\n        \n        # Loop until the start pointer is no longer less than the end pointer.\n        while start < end:\n            # Move the start pointer towards the end until it points to a vowel.\n            while start < end and vowels.find(word[start]) == -1:\n                start += 1\n            \n            # Move the end pointer towards the start until it points to a vowel.\n            while start < end and vowels.find(word[end]) == -1:\n                end -= 1\n            \n            # Swap the vowels found at the start and end positions.\n            word[start], word[end] = word[end], word[start]\n            \n            # Move the pointers towards each other for the next iteration.\n            start += 1\n            end -= 1\n        \n        # Convert the character array back to a string and return the result.\n        return \"\".join(word)"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public String reverseVowels(String s) {\n        char [] ch=s.toCharArray();\n       int i=0, j=ch.length-1;\n       while(i<j)\n       {\n           while (i < j && (ch[i] != 'a' && ch[i] != 'e' && ch[i] != 'i' && ch[i] != 'o' && ch[i] != 'u' &&\n                   ch[i] != 'A' && ch[i] != 'E' && ch[i] != 'I' && ch[i] != 'O' && ch[i] != 'U'))\n\n           {\n              i++;\n          }\n           while (i < j && (ch[j] != 'a' && ch[j] != 'e' && ch[j] != 'i' && ch[j] != 'o' && ch[j] != 'u' &&\n                   ch[j] != 'A' && ch[j] != 'E' && ch[j] != 'I' && ch[j] != 'O' && ch[j] != 'U'))\n          {\n              j--;\n          }\n          char temp=ch[i];\n          ch[i]=ch[j];\n          ch[j]=temp;\n          i++;\n          j--;\n       }\n        return new String(ch);\n    }\n}"
+            }
+        ]
+    },
+    "Intersection of Two Arrays II": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:\n        if len(nums1) > len(nums2): return self.intersect(nums2, nums1)\n            \n        cnt = Counter(nums1)\n        ans = []\n        for x in nums2:\n            if cnt[x] > 0:\n                ans.append(x)\n                cnt[x] -= 1\n        return ans"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution(object):\n    def intersect(self, nums1, nums2):\n        nums1.sort()\n        nums2.sort()\n        \n        i, j = 0, 0\n        result = []\n        \n        while i < len(nums1) and j < len(nums2):\n            if nums1[i] < nums2[j]:\n                i += 1\n            elif nums1[i] > nums2[j]:\n                j += 1\n            else:\n                result.append(nums1[i])\n                i += 1\n                j += 1\n                \n        return result\n        "
+            }
+        ]
+    },
+    "Valid Perfect Square": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public boolean isPerfectSquare(int num) {\n        if (num < 2) return true;\n        \n        long left = 2, right = num / 2, mid, guessSquared;\n        while (left <= right) {\n            mid = left + (right - left) / 2;\n            guessSquared = mid * mid;\n            if (guessSquared == num) return true;\n            if (guessSquared > num) right = mid - 1;\n            else left = mid + 1;\n        }\n        \n        return false;\n    }\n}\n"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isPerfectSquare(self, num: int) -> bool:\n        x = num\n        while x * x > num:\n            x = (x + num // x) // 2\n        return x * x == num\n        \n        "
+            }
+        ]
+    },
+    "Find the Difference": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def findTheDifference(self, s: str, t: str) -> str:\n        # Initialize a dictionary to store character counts\n        count = {}\n\n        # Count characters in string t\n        for c in t:\n            count[c] = count.get(c, 0) + 1\n\n        # Subtract counts for characters in string s\n        for c in s:\n            count[c] -= 1\n            if count[c] == 0:\n                del count[c]\n\n        # The remaining character in the dictionary is the difference\n        return list(count.keys())[0]"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    char findTheDifference(string s, string t) \n    {\n      for(int i=0;i<s.size();i++)\n\t\tt[i+1]+=t[i]-s[i]; //Passing the diff: (t[i]-s[i]) to t[i+1]\n      return t[t.size()-1]; //The diff will be carried over to the last element eventually\n    }\n};"
+            }
+        ]
+    },
+    "Is Subsequence": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isSubsequence(self, s: str, t: str) -> bool:\n        sp = tp = 0\n\n        while sp < len(s) and tp < len(t):\n            if s[sp] == t[tp]:\n                sp += 1\n            tp += 1\n        \n        return sp == len(s)"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isSubsequence(self, s: str, t: str) -> bool:\n        j = 0\n        for char in t:\n            if j < len(s) and s[j] == char:\n                j += 1\n        return j == len(s)"
+            }
+        ]
+    },
+    "Binary Watch": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": ""
+            },
+            {
+                "language": "Python",
+                "code": "vector<string> readBinaryWatch(int num) {\n    vector<string> rs;\n    for (int h = 0; h < 12; h++)\n    for (int m = 0; m < 60; m++)\n        if (bitset<10>(h << 6 | m).count() == num)\n            rs.emplace_back(to_string(h) + (m < 10 ? \":0\" : \":\") + to_string(m));\n    return rs;\n}"
+            }
+        ]
+    },
+    "Convert a Number to Hexadecimal": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": ""
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def toHex(self, num: int) -> str:\n        if num == 0:\n            return \"0\"\n        if num < 0:\n            num += 2**32\n        hex_str = hex(num)[2:]\n        return hex_str"
+            }
+        ]
+    },
+    "Longest Palindrome": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public int longestPalindrome(String s) {\n        // length is 71 instead of 52 because ascii 'z' - 'A' = 71\n        int[] letters = new int[71];\n        int length = 0;\n        for (char ch: s.toCharArray()){\n            letters[ch-'A']++;\n        }\n        for (int i = 0; i < 71; i++) {\n        //  bitwise operation, same as count.isEven?count;count-1\n            length += letters[i] & ~1;\n        }\n        return Math.min(s.length(), length+1);\n    }\n}"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def longestPalindrome(self, s: str) -> int:\n        # Initialize a set to keep track of characters with odd frequencies\n        char_set = set()\n        # Initialize the length of the longest palindrome\n        length = 0\n        \n        # Iterate over each character in the string\n        for char in s:\n            # If the character is already in the set, remove it and increase the length by 2\n            if char in char_set:\n                char_set.remove(char)\n                length += 2\n            # If the character is not in the set, add it to the set\n            else:\n                char_set.add(char)\n        \n        # If there are any characters left in the set, add 1 to the length for the middle character\n        if char_set:\n            length += 1\n        \n        # Return the total length of the longest palindrome\n        return length"
+            }
+        ]
+    },
+    "Add Strings": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def addStrings(self, num1: str, num2: str) -> str:\n        sys.set_int_max_str_digits(10000)\n        return str(int(num1)+int(num2))\n\"\"\"\nclass Solution:\n    def addStrings(self, num1: str, num2: str) -> str:\n        i, j = len(num1) - 1, len(num2) - 1\n        carry = 0\n        result = []\n\n        while i >= 0 or j >= 0 or carry:\n            digit1 = int(num1[i]) if i >= 0 else 0\n            digit2 = int(num2[j]) if j >= 0 else 0\n\n            total = digit1 + digit2 + carry\n            carry = total // 10\n\n            result.append(str(total % 10))\n\n            i -= 1\n            j -= 1\n\n        return ''.join(result[::-1])\n\"\"\""
+            },
+            {
+                "language": "Python",
+                "code": ""
+            }
+        ]
+    },
+    "Arranging Coins": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int arrangeCoins(int n) {\n        long long k = (long long)(-1LL + sqrt(1LL+8LL*n))/2;\n        return (int)k;\n    }\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int arrangeCoins(int n) {\n        int low = 1;\n        int high = n;\n        int result;\n        long long mid = low + (high - low) / 2;\n        while(low < = high){\n            long long cal = mid * (mid + 1) / 2; \n            if(cal <= n){\n                ans = mid;\n                low = mid + 1;\n            }else if(cal > n){\n                high = mid - 1;\n            }\n            mid=low + ( high - low) / 2;\n        }\n        return  result;\n    }\n};"
+            }
+        ]
+    },
+    "Assign Cookies": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution(object):\n    def findContentChildren(self, g, s):\n        cookiesNums = len(s)\n        if cookiesNums == 0:\n            return 0\n        g.sort()\n        s.sort()\n\n        maxNum = 0\n        cookieIndex = cookiesNums - 1\n        childIndex = len(g) - 1\n        while cookieIndex >= 0 and childIndex >= 0:\n            if s[cookieIndex] >= g[childIndex]:\n                maxNum += 1\n                cookieIndex -= 1\n                childIndex -= 1\n            else:\n                childIndex -= 1\n\n        return maxNum\n        "
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def findContentChildren(self, g: List[int], s: List[int]) -> int:\n        g.sort()\n        s.sort()\n        count = 0\n        i, j = 0, 0\n        while i < len(g) and j < len(s):\n            if s[j] >= g[i]:\n                count += 1\n                i += 1\n            j += 1\n        return count"
+            }
+        ]
+    },
+    "Repeated Substring Pattern": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def repeatedSubstringPattern(self, s: str) -> bool:\n        n = len(s)\n        for i in range(1, n // 2 + 1):\n            if n % i == 0 and s[:i] * (n // i) == s:\n                return True\n        \n        return False"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    bool repeatedSubstringPattern(string s) {\n        string x;\n        for(int i=0;i<s.size()/2;i++){\n            x+=s[i];\n            string y;\n            while(y.size()<s.size()){\n                y+=x;\n            }\n            //cout<<y<<endl;\n            if(y==s) return true;\n        }\n        return false;\n    }\n};"
+            }
+        ]
+    },
+    "License Key Formatting": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "    public String licenseKeyFormatting(String s, int k) {\n        StringBuilder sb = new StringBuilder();\n        for (int i = s.length() - 1; i >= 0; i--)\n            if (s.charAt(i) != '-')\n                sb.append(sb.length() % (k + 1) == k ? '-' : \"\").append(s.charAt(i));\n        return sb.reverse().toString().toUpperCase();\n    } "
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public String licenseKeyFormatting(String s, int k) {\n        String withoutHyphen = s.replaceAll(\"-\", \"\");\n        int n = withoutHyphen.length();\n        int remainder = n % k;\n        String res = \"\";\n        if (remainder > 0) {\n            res += withoutHyphen.substring(0, remainder) + \"-\";\n        }\n        for (int i = remainder; i + k <= n; i += k) {\n            res += withoutHyphen.substring(i, i + k) + \"-\";\n        }\n        return res.toUpperCase().substring(0, res.length()!=0 ? res.length() - 1 : res.length());\n    }\n}"
+            }
+        ]
+    },
+    "Construct the Rectangle": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def constructRectangle(self, area: int) -> List[int]:\n        for l in range(int(area**0.5), 0, -1):            \n            if area % l == 0: \n                return [area // l, l]"
+            },
+            {
+                "language": "Python",
+                "code": "from math import sqrt\n\nclass Solution:\n    def constructRectangle(self, area: int) -> List[int]:\n        for i in range(int(sqrt(area)), 0, -1):\n            if area % i == 0:\n                return [area // i, i]"
+            }
+        ]
+    },
+    "Teemo Attacking": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int findPoisonedDuration(vector<int>& timeSeries, int duration) \n    {\n        int total =0;\n        for(int i=0;i<timeSeries.size()-1;i++)\n        {\n            int time = timeSeries[i+1]-timeSeries[i];\n            // if(time<duration)\n            //     total+=time;\n            // else\n            //     total+=duration;\n            total+=min(time,duration);\n        }\n        total+=duration;\n        return total;\n    }\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int findPoisonedDuration(vector<int>& timeSeries, int duration) {\n        int lv=timeSeries.size();\n        long long cnt=1ll*duration*lv;//     assume that there is no duplication\n        for(int i=0;i<lv-1;++i)\n            if(timeSeries[i+1]-timeSeries[i]<duration) cnt-=duration-(timeSeries[i+1]-timeSeries[i]);//     remove the duplication\n        return (int)cnt;\n    }\n};"
+            }
+        ]
+    },
+    "Base 7": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\nstring convertToBase7(int num) {\n    if (num == 0) return \"0\";\n    string result;\n    bool isNegative = (num < 0);\n    num = abs(num);\n    while (num > 0) {\n        result = to_string(num % 7) + result;\n        num /= 7;\n    }\n    return (isNegative)? '-' + result : result;\n}\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public String convertToBase7(int num) {\n        int temp = num;\n        int sign = 0;\n        String ans = \"\";\n        if(num < 0){\n            temp = -num;\n            sign = 1;\n        }\n        while(temp >= 7){\n            ans = (temp % 7) + ans ;\n            temp  = temp / 7 ;\n        }\n        ans = temp + ans;\n        if(sign == 0){\n            return ans;\n        }\n        else{\n            ans = \"-\" + ans;\n            return ans;\n        }                   \n    }\n}"
+            }
+        ]
+    },
+    "Perfect Number": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    bool checkPerfectNumber(int num) {\n        if(num <= 0) return false;\n        int sum = 1;\n        if(sqrt(num)*sqrt(num)==num) sum+=sqrt(num);\n        for(int i = 2; i<sqrt(num); i++){\n            if(num % i == 0 ){\n                sum = sum + i +(num/i);\n            }\n        }\n        return sum == num;\n    }\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public boolean checkPerfectNumber(int num) {\n         if (num <= 1) return false;\n        int sum = 1; // 1 is a divisor for all numbers\n        for (int i = 2; i * i <= num; i++) {\n            if (num % i == 0) {\n                sum += i;\n                if (i != num / i) { // Avoid adding the square root twice\n                    sum += num / i;\n                }\n            }\n        }\n        return sum == num;\n    }\n}"
+            }
+        ]
+    },
+    "Zigzag Conversion": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def convert(self, s: str, numRows: int) -> str:\n        if numRows == 1 or numRows >= len(s):\n            return s\n\n        idx, d = 0, 1\n        rows = [[] for _ in range(numRows)]\n\n        for char in s:\n            rows[idx].append(char)\n            if idx == 0:\n                d = 1\n            elif idx == numRows - 1:\n                d = -1\n            idx += d\n\n        for i in range(numRows):\n            rows[i] = ''.join(rows[i])\n\n        return ''.join(rows)   "
+            },
+            {
+                "language": "Python",
+                "code": "\n\nclass Solution {\npublic:\n\n    string convert(string s, int numRows) {\n    \n    if(numRows <= 1) return s;\n\n    vector<string>v(numRows, \"\"); \n\n    int j = 0, dir = -1;\n\n    for(int i = 0; i < s.length(); i++)\n    {\n\n        if(j == numRows - 1 || j == 0) dir *= (-1); \n\t\t \n        v[j] += s[i];\n\n        if(dir == 1) j++;\n\n        else j--;\n    }\n\n    string res;\n\n    for(auto &it : v) res += it; \n\n    return res;\n\n    }\n};\n\n"
+            }
+        ]
+    },
+    "Container With Most Water": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def maxArea(self, height: List[int]) -> int:\n        max_area = 0\n        left = 0\n        right = len(height) - 1\n\n        while left < right:\n            max_area = max(max_area, (right - left) * min(height[left], height[right]))\n\n            if height[left] < height[right]:\n                left += 1\n            else:\n                right -= 1\n        \n        return max_area"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def maxArea(self, height: List[int]) -> int:\n        left = 0\n        right = len(height) - 1\n        maxArea = 0\n\n        while left < right:\n            currentArea = min(height[left], height[right]) * (right - left)\n            maxArea = max(maxArea, currentArea)\n\n            if height[left] < height[right]:\n                left += 1\n            else:\n                right -= 1\n\n        return maxArea"
+            }
+        ]
+    },
+    "3Sum Closest": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public int threeSumClosest(int[] nums, int target) {\n        int length = nums.length;\n\n        // If the array has fewer than 4 elements, just return the sum of the first three\n        if (length < 4) {\n            return nums[0] + nums[1] + nums[2];\n        }\n\n        // Sort the array to use the two-pointer technique later\n        Arrays.sort(nums);\n\n        // If this largest sum is already <= target, it's the closest sum possible\n        int max_sum = nums[length - 1] + nums[length - 2] + nums[length - 3];\n        if (max_sum <= target) {\n            return max_sum;\n        }\n\n        // closest_dif will store the difference between the target and \n        // the current closest sum we have found\n        int closest_dif = max_sum;\n\n        for (int i = 0; i < length - 2; ++i) {\n            int left = i + 1, right = length - 1;\n\n            // Update the minimum sum for the current 'i' by picking the closest elements\n            // after sorting.\n            min_sum = nums[i] + nums[left] + nums[left + 1];\n            // If the difference (min_sum - target) is greater than or equal to \n            // the absolute value of closest_dif, it means we cannot find a better sum.\n            // So we return 'target - closest_dif' because closest_dif holds\n            // the difference from an earlier calculation\n            if (min_sum - target >= Math.abs(closest_dif)) {\n                return target - closest_dif;\n            }\n\n            while (left < right) {\n                int current_dif = target - (nums[i] + nums[left] + nums[right]);\n\n                // If current_dif is 0, it means we found an exact match\n                if (current_dif == 0) {\n                    return target;\n                } else if (current_dif > 0) {\n                    // If current_dif is positive, our sum is less than the target,\n                    // so we move left up to increase the sum\n                    ++left;\n                } else {\n                    // Otherwise, our sum is greater than the target,\n                    // so we move right down to decrease the sum\n                    --right;\n                }\n\n                // If this new difference is smaller in absolute terms \n                // we update closest_dif\n                if (Math.abs(closest_dif) > Math.abs(current_dif)) {\n                    closest_dif = current_dif;\n                }\n            }\n        }\n\n        // After checking all possible triplets, the closest sum is 'target - closest_dif',\n        // because 'closest_dif' = target - (closest sum).\n        return target - closest_dif;\n    }\n}\n"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution(object):\n    def threeSumClosest(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        nums.sort()\n        closest_sum = float('inf')\n        \n        for i in range(len(nums) - 2):\n            left, right = i + 1, len(nums) - 1\n            while left < right:\n                current_sum = nums[i] + nums[left] + nums[right]\n                if abs(current_sum - target) < abs(closest_sum - target):\n                    closest_sum = current_sum\n                if current_sum < target:\n                    left += 1\n                elif current_sum > target:\n                    right -= 1\n                else:\n                    return current_sum\n        \n        return closest_sum"
+            }
+        ]
+    },
+    "Search in Rotated Sorted Array": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def search(self, nums: List[int], target: int) -> int:\n\n        left = 0\n        right = len(nums) - 1\n\n        while left <= right:\n            mid = (left + right) // 2\n\n            if nums[mid] == target:\n                return mid\n            elif nums[mid] >= nums[left]:\n                if nums[left] <= target <= nums[mid]:\n                    right = mid - 1\n                else:\n                    left = mid + 1\n            else:\n                if nums[mid] <= target <= nums[right]:\n                    left = mid + 1\n                else:\n                    right = mid - 1\n        \n        return -1"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def search(self, nums: List[int], target: int) -> int:\n        left, right = 0, len(nums) - 1\n\n        while left <= right:\n            mid = (left + right) // 2\n\n            if nums[mid] == target:\n                return mid\n\n            # Check if left half is sorted\n            if nums[left] <= nums[mid]:\n                if nums[left] <= target < nums[mid]:\n                    right = mid - 1\n                else:\n                    left = mid + 1\n            # Otherwise, right half is sorted\n            else:\n                if nums[mid] < target <= nums[right]:\n                    left = mid + 1\n                else:\n                    right = mid - 1\n\n        return -1"
+            }
+        ]
+    },
+    "Find First and Last Position of Element in Sorted Array": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public int[] searchRange(int[] nums, int target) {\n        int[] res = new int[2];\n        res[0] = -1;\n        res[1] = -1;\n        int n = nums.length;\n        for(int i=0; i<n; i++) {\n            if(nums[i]==target) {\n                res[0] = i;\n                break;\n            }\n        }\n        for(int i=n-1; i>=0; i--) {\n            if(nums[i]==target) {\n                res[1] = i;\n                break;\n            }\n        }\n        return res;\n    }\n}"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def searchRange(self, nums: List[int], target: int) -> List[int]:\n        \n        def binary_search(nums, target, is_searching_left):\n            left = 0\n            right = len(nums) - 1\n            idx = -1\n            \n            while left <= right:\n                mid = (left + right) // 2\n                \n                if nums[mid] > target:\n                    right = mid - 1\n                elif nums[mid] < target:\n                    left = mid + 1\n                else:\n                    idx = mid\n                    if is_searching_left:\n                        right = mid - 1\n                    else:\n                        left = mid + 1\n            \n            return idx\n        \n        left = binary_search(nums, target, True)\n        right = binary_search(nums, target, False)\n        \n        return [left, right]\n            "
+            }
+        ]
+    },
+    "Count and Say": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    string countAndSay(int n) {\n        // Base case: if n is 1, return the initial sequence \"1\"\n        if (n == 1) return \"1\";\n        \n        // Start with the first sequence\n        string s = \"1\";\n\n        // Generate the sequence iteratively up to the nth sequence\n        for (int i = 2; i <= n; i++) {\n            const int len = s.size(); // Length of the current sequence\n            string t; \n            t.reserve(len << 1); // Reserve space to minimize reallocations\n\n            // Process the current sequence to build the next one\n            for (int j = 0; j < len;) {\n                char c = s[j]; // Current character to count\n                int count = 1; // Start counting occurrences\n\n                // Count consecutive characters\n                while (j + count < len && s[j + count] == c) count++;\n\n                // Append the count and the character to the new sequence\n                t.push_back('0' + count); // Convert count to character\n                t.push_back(c);\n\n                // Move to the next character group\n                j += count;\n            }\n            // Update the current sequence to the newly generated one\n            s = move(t);\n        }\n\n        // Return the nth sequence\n        return s;\n    }\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public String countAndSay(int n) {\n        if (n == 1) return \"1\";\n\n    String prev = countAndSay(n - 1);\n    StringBuilder result = new StringBuilder();\n\n    int count = 1;\n    for (int i = 1; i < prev.length(); i++) {\n        if (prev.charAt(i) == prev.charAt(i - 1)) {\n            count++;\n        } else {\n            result.append(count).append(prev.charAt(i - 1));\n            count = 1;\n        }\n    }\n    result.append(count).append(prev.charAt(prev.length() - 1));\n\n    return result.toString();\n        \n    }\n}"
+            }
+        ]
+    },
+    "Combination Sum II": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def combinationSum2(self, nums: List[int], target: int) -> List[List[int]]:\n\n        result = []\n        nums.sort()\n\n        def _backtrack(ind,arr,k,result):\n\n            if k == 0:\n                result.append(arr[:])\n                return\n            \n            if k < 0:\n                return\n\n            \n            for j in range(ind,len(nums)):\n\n                if nums[j] > k: \n                    break\n\n                if j > ind and nums[j] == nums[j - 1]:\n                    continue\n                \n\n                arr.append(nums[j])\n\n                _backtrack(j + 1, arr, k - nums[j], result)\n\n                arr.pop()\n\n\n        _backtrack(0,[],target,result)\n\n        return result\n        "
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:\n        candidates.sort()\n        res = []\n\n        def dfs(target, start, comb):\n            if target < 0:\n                return\n            if target == 0:\n                res.append(comb)\n                return\n            for i in range(start, len(candidates)):\n                if i > start and candidates[i] == candidates[i-1]:\n                    continue\n                if candidates[i] > target:\n                    break\n                dfs(target-candidates[i], i+1, comb+[candidates[i]])\n\n        dfs(target, 0, [])\n        return res\n"
+            }
+        ]
+    },
+    "Multiply Strings": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "import java.math.*;\nclass Solution {\n    public String multiply(String num1, String num2) {\n        BigInteger b = new BigInteger(num1);\n        BigInteger c = new BigInteger(num2);\n\n        BigInteger a = b.multiply(c);\n\n        String ans = a.toString();\n        \n        return ans;\n    }\n}"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    string multiply(string num1, string num2) {\n        reverse(num1.begin(), num1.end());\n        reverse(num2.begin(), num2.end());\n        vector<vector<int>> table;\n        for (int i = 0; i < num2.size(); i++) {\n            vector<int> row;\n            for (int j = 0; j < i; j++) {\n                row.push_back(0);\n            }\n            int carry = 0;\n            for (int j = 0; j < num1.size(); j++) {\n                int a = num1[j] - '0';\n                int b = num2[i] - '0';\n                int c = a * b;\n                int d = (c + carry) % 10;\n                carry = (c + carry) / 10;\n                row.push_back(d);\n            }\n            if (carry) row.push_back(carry);\n            table.push_back(row);\n        }\n        int maxSize = 0;\n        for (auto &row : table) {\n            maxSize = max(maxSize, (int)row.size());\n        }\n        for (auto &row : table) {\n            while (row.size() < maxSize) {\n                row.push_back(0);\n            }\n        }\n        string result = \"\";\n        int carry = 0;\n        for (int i = 0; i < maxSize; i++) {\n            int sum = carry;\n            for (int j = 0; j < table.size(); j++) {\n                sum += table[j][i];\n            }\n            result += (sum % 10 + '0');\n            carry = sum / 10;\n        }\n        while (carry) {\n            result += (carry % 10 + '0');\n            carry /= 10;\n        }\n        reverse(result.begin(), result.end());\n        int pos = 0;\n        while (pos < result.size() && result[pos] == '0') pos++;\n        result = result.substr(pos);\n        return result.empty() ? \"0\" : result;\n    }\n};"
+            }
+        ]
+    },
+    "Jump Game II": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def jump(self, nums: List[int]) -> int:\n        near = far = jumps = 0\n\n        while far < len(nums) - 1:\n            farthest = 0\n            for i in range(near, far + 1):\n                farthest = max(farthest, i + nums[i])\n            \n            near = far + 1\n            far = farthest\n            jumps += 1\n        \n        return jumps"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int jump(vector<int>& nums) {\n        // Initialize variables to track the number of jumps,\n        // the end of the current jump range, and the farthest reachable index\n        int jumps = 0, curEnd = 0, curFarthest = 0;\n\n        // Iterate through the array, stopping before the last element\n        for (int i = 0; i < nums.size() - 1; i++) {\n            // Update the farthest position we can reach from the current index\n            curFarthest = max(curFarthest, i + nums[i]);\n\n            // If we reach the end of the current jump range\n            if (i == curEnd) {\n                // Increment the jump counter\n                jumps++;\n                // Update the current jump range to the farthest reachable index\n                curEnd = curFarthest;\n\n                // Optional: Early exit if the current jump already covers the last index\n                if (curEnd >= nums.size() - 1) {\n                    break;\n                }\n            }\n        }\n\n        // Return the total number of jumps needed\n        return jumps;\n    }\n};"
+            }
+        ]
+    },
+    "Maximum Subarray": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def maxSubArray(self, nums: List[int]) -> int:            \n        res = nums[0]\n        total = 0\n\n        for n in nums:\n            if total < 0:\n                total = 0\n\n            total += n\n            res = max(res, total)\n        \n        return res"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int maxSubArray(vector<int>& nums) {\n        int n = size(nums), ans = INT_MIN;\n        for(int i = 0; i < n; i++) \n            for(int j = i, curSum = 0; j < n ; j++) \n                curSum += nums[j],\n                ans = max(ans, curSum);        \n        return ans;\n    }\n};"
+            }
+        ]
+    },
+    "Spiral Matrix": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:\n        rows, cols = len(matrix), len(matrix[0])\n        x, y, dx, dy = 0, 0, 1, 0\n        res = []\n\n        for _ in range(rows * cols):\n            res.append(matrix[y][x])\n            matrix[y][x] = \".\"\n\n            if not 0 <= x + dx < cols or not 0 <= y + dy < rows or matrix[y+dy][x+dx] == \".\":\n                dx, dy = -dy, dx\n            \n            x += dx\n            y += dy\n        \n        return res"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution \n{\n    public List<Integer> spiralOrder(int[][] matrix) \n    {\n        List<Integer> res = new ArrayList<>();\n        int m = matrix.length;\n        int n = matrix[0].length;\n\n        for(int i = 0; i <= m/2; i++)\n        {\n            for(int j = i; j < n-i   && res.size() != m*n; j++)    res.add(matrix[i][j]);\n            for(int j = i+1; j < m-i && res.size() != m*n; j++)    res.add(matrix[j][n-i-1]);\n            for(int j = n-i-2; j >= i && res.size() != m*n; j--)   res.add(matrix[m-i-1][j]);\n            for(int j = m-i-2; j > i && res.size() != m*n; j--)    res.add(matrix[j][i]);\n        }\n        return res;\n    }\n}"
+            }
+        ]
+    },
+    "Merge Intervals": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def merge(self, intervals: List[List[int]]) -> List[List[int]]:        \n        merged = []\n        intervals.sort(key=lambda x: x[0])\n\n        prev = intervals[0]\n\n        for interval in intervals[1:]:\n            if interval[0] <= prev[1]:\n                prev[1] = max(prev[1], interval[1])\n            else:\n                merged.append(prev)\n                prev = interval\n        \n        merged.append(prev)\n\n        return merged"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def merge(self, intervals: List[List[int]]) -> List[List[int]]:\n        intervals = sorted(intervals, key=lambda x: x [0])\n\n        ans = []\n\n        for interval in intervals:\n            if not ans or ans[-1][1] < interval[0]:\n                ans.append(interval)\n            else:\n                ans[-1][1] = max(ans[-1][1], interval[1])\n        \n        return ans"
+            }
+        ]
+    },
+    "Insert Interval": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:\n        intervals.append(newInterval)\n        intervals.sort()\n\n        res = [intervals[0]]\n\n        for i in range(1, len(intervals)):\n            if res[-1][1] >= intervals[i][0]:\n                res[-1][1] = max(res[-1][1], intervals[i][1])\n            else:\n                res.append(intervals[i])\n\n        return res"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution(object):\n    def insert(self, intervals, newInterval):\n        merged = []\n        i = 0\n\n        while i < len(intervals) and intervals[i][1] < newInterval[0]:\n            merged.append(intervals[i])\n            i += 1\n        \n        while i < len(intervals) and intervals[i][0] <= newInterval[1]:\n            newInterval = [min(newInterval[0], intervals[i][0]), max(newInterval[1], intervals[i][1])]\n            i += 1\n        merged.append(newInterval)\n        \n        while i < len(intervals):\n            merged.append(intervals[i])\n            i += 1\n        \n        return merged"
+            }
+        ]
+    },
+    "Unique Paths II": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:\n        if not obstacleGrid or obstacleGrid[0][0] == 1:\n            return 0\n\n        rows, cols = len(obstacleGrid), len(obstacleGrid[0])\n        dp = [0] * cols\n        dp[0] = 1\n\n        for r in range(rows):\n            for c in range(cols):\n                if obstacleGrid[r][c] == 1:\n                    dp[c] = 0\n                else:\n                    if c > 0:\n                        dp[c] += dp[c - 1]\n\n        return dp[cols - 1] "
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int countpath(int i, int j, vector<vector<int>>& obstacleGrid, vector<vector<int>>& dp) {\n        // Base cases\n        if (i < 0 || j < 0 || obstacleGrid[i][j] == 1) return 0; // Out of bounds or obstacle\n        if (i == 0 && j == 0) return obstacleGrid[i][j] == 0 ? 1 : 0; // Starting point\n        \n        // Use memoized result if available\n        if (dp[i][j] != -1) return dp[i][j];\n        \n        // Calculate paths from top and left cells\n        int count = 0;\n        if (i > 0) count += countpath(i - 1, j, obstacleGrid, dp); // Move up\n        if (j > 0) count += countpath(i, j - 1, obstacleGrid, dp); // Move left\n        \n        return dp[i][j] = count; // Store result\n    }\n\n    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {\n        int m = obstacleGrid.size();\n        int n = obstacleGrid[0].size();\n        \n        // Initialize dp array with -1\n        vector<vector<int>> dp(m, vector<int>(n, -1));\n        \n        // Start recursion from the bottom-right corner\n        return countpath(m - 1, n - 1, obstacleGrid, dp);\n    }\n};\n"
+            }
+        ]
+    },
+    "Simplify Path": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def simplifyPath(self, path: str) -> str:\n        components = path.split(\"/\")\n        st = []\n\n        for comp in components:\n            if comp == \"\" or comp == \".\":\n                continue\n            \n            if comp == \"..\":\n                if st:\n                    st.pop()\n            else:\n                st.append(comp)\n        \n        return \"/\" + \"/\".join(st)"
+            },
+            {
+                "language": "Python",
+                "code": ""
+            }
+        ]
+    },
+    "Edit Distance": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n  def minDistance(self, word1: str, word2: str) -> int:\n    m = len(word1)\n    n = len(word2)\n    # dp[i][j] := min # Of operations to convert word1[0..i) to word2[0..j)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n\n    for i in range(1, m + 1):\n      dp[i][0] = i\n\n    for j in range(1, n + 1):\n      dp[0][j] = j\n\n    for i in range(1, m + 1):\n      for j in range(1, n + 1):\n        if word1[i - 1] == word2[j - 1]:\n          dp[i][j] = dp[i - 1][j - 1]\n        else:\n          dp[i][j] = min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + 1\n\n    return dp[m][n]"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def minDistance(self, word1, word2):\n        \"\"\"Naive recursive solution\"\"\"\n        if not word1 and not word2:\n            return 0\n        if not word1:\n            return len(word2)\n        if not word2:\n            return len(word1)\n        if word1[0] == word2[0]:\n            return self.minDistance(word1[1:], word2[1:])\n        insert = 1 + self.minDistance(word1, word2[1:])\n        delete = 1 + self.minDistance(word1[1:], word2)\n        replace = 1 + self.minDistance(word1[1:], word2[1:])\n        return min(insert, replace, delete)"
+            }
+        ]
+    },
+    "Search a 2D Matrix": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:\n        \n        top = 0\n        bot = len(matrix) - 1\n\n        while top <= bot:\n            mid = (top + bot) // 2\n\n            if matrix[mid][0] < target and matrix[mid][-1] > target:\n                break\n            elif matrix[mid][0] > target:\n                bot = mid - 1\n            else:\n                top = mid + 1\n        \n        row = (top + bot) // 2\n\n        left = 0\n        right = len(matrix[row]) - 1\n\n        while left <= right:\n            mid = (left + right) // 2\n\n            if matrix[row][mid] == target:\n                return True\n            elif matrix[row][mid] > target:\n                right = mid - 1\n            else:\n                left = mid + 1\n        \n        return False"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    bool searchMatrix(vector<vector<int>>& matrix, int target) {\n        int rows = matrix.size(),\n\t\t\tcols = matrix[0].size(),\n            row = 0, col = cols - 1;\n\t\t\t\n        while (row < rows && col > -1) {\n            int cur = matrix[row][col];\n            if (cur == target) return true;\n            if (target > cur) row++;\n            else col--;\n        }\n        \n        return false;\n    }\n};"
+            }
+        ]
+    },
+    "Word Search": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def exist(self, board, word):\n        def backtrack(i, j, k):\n            if k == len(word):\n                return True\n            if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]) or board[i][j] != word[k]:\n                return False\n            \n            temp = board[i][j]\n            board[i][j] = ''\n            \n            if backtrack(i+1, j, k+1) or backtrack(i-1, j, k+1) or backtrack(i, j+1, k+1) or backtrack(i, j-1, k+1):\n                return True\n            \n            board[i][j] = temp\n            return False\n        \n        for i in range(len(board)):\n            for j in range(len(board[0])):\n                if backtrack(i, j, 0):\n                    return True\n        return False"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def exist(self, board: List[List[str]], word: str) -> bool:\n    \n        rows, cols = len(board), len(board[0])\n        visited = set()\n\n        def dfs(r, c, k):\n            if k == len(word):\n                return True\n\n            if not (0 <= r < rows) or not (0 <= c < cols) or (r,c) in visited or board[r][c] != word[k]:\n                return False\n            \n            visited.add((r,c))\n            res = dfs(r+1, c, k+1) or dfs(r-1, c, k+1) or dfs(r, c+1, k+1) or dfs(r, c-1, k+1)\n            visited.remove((r,c))\n            return res\n             \n        count = {}\n        for c in word:\n            count[c] = 1 + count.get(c, 0)\n        \n        if count[word[0]] > count[word[-1]]:\n            word = word[::-1]\n        \n        for r in range(rows):\n            for c in range(cols):\n                if dfs(r, c, 0): return True\n        \n        return False"
+            }
+        ]
+    },
+    "Subsets II": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n  def subsetsWithDup(self, nums: list[int]) -> list[list[int]]:\n    ans = []\n    def dfs(s: int, path: list[int]) -> None:\n      ans.append(path)\n      if s == len(nums):\n        return\n\n      for i in range(s, len(nums)):\n        if i > s and nums[i] == nums[i - 1]:\n          continue\n        dfs(i + 1, path + [nums[i]])\n\n    nums.sort()\n    dfs(0, [])\n    return ans"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    set<vector<int>> result;\n\n    void solve(vector<int>& nums, int i, vector<int>& temp) {\n        if (i >= nums.size()) {\n            result.insert(temp);\n            return;\n        }\n        temp.push_back(nums[i]);\n        solve(nums, i + 1, temp); // take\n        temp.pop_back();\n        solve(nums, i + 1, temp); // not take\n    }\n\n    vector<vector<int>> subsetsWithDup(vector<int>& nums) {\n        sort(nums.begin(), nums.end()); //  to Ensure duplicates are adjacent\n        vector<int> temp;\n        solve(nums, 0, temp);\n\n        // Convert set to vector for the result\n        return vector<vector<int>>(result.begin(), result.end());\n    }\n};\n"
+            }
+        ]
+    },
+    "Restore IP Addresses": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n    List<String> ans ;\n    public List<String> restoreIpAddresses(String s) {\n        ans = new ArrayList<>();\n        solveII(s , 0 , 0 , new StringBuilder());\n        return ans ;\n    }\n\n    public void solveII(String s , int idx ,int count , StringBuilder sb){\n        if(idx == s.length() && count == 4){\n            ans.add(sb.toString());\n            return ;\n        }\n\n        if(count > 4 || idx >= s.length()) return ; \n\n        for(int i = 1 ; i <=3  && idx+i <=s.length() ; i++){\n            String part = s.substring(idx , idx+i);\n            int val = Integer.valueOf(part);\n\n            if(val > 255 || (part.length() > 1 && part.startsWith(\"0\"))) continue ;\n\n            int prevLength = sb.length();\n            if(count > 0) sb.append(\".\");\n            sb.append(part);\n\n            solveII(s , idx+i , count+1 , sb);\n\n            sb.setLength(prevLength);\n        }\n    }\n    \n}"
+            },
+            {
+                "language": "Python",
+                "code": "    bool check(string s){\n        if(s.length() == 1)\n            return true;\n        if(s[0] == '0')\n            return false;\n        if(s.length() == 2)\n            return true;\n        if(s[0] > '2')\n            return false;\n        if(s[0] == '2' && s[1] > '5')\n            return false;\n        if(s[0] == '2' && s[1] == '5' && s[2] > '5')\n            return false;\n        return true;\n    }"
+            }
+        ]
+    },
+    "Interleaving String": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:\n        m, n, l = len(s1), len(s2), len(s3)\n        if m + n != l:\n            return False\n        \n        if m < n:\n            return self.isInterleave(s2, s1, s3)\n        \n        dp = [False] * (n + 1)\n        dp[0] = True\n        \n        for j in range(1, n + 1):\n            dp[j] = dp[j-1] and s2[j-1] == s3[j-1]\n        \n        for i in range(1, m + 1):\n            dp[0] = dp[0] and s1[i-1] == s3[i-1]\n            for j in range(1, n + 1):\n                dp[j] = (dp[j] and s1[i-1] == s3[i+j-1]) or (dp[j-1] and s2[j-1] == s3[i+j-1])\n        \n        return dp[n]"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n\n    /**\n     * @param String $s1\n     * @param String $s2\n     * @param String $s3\n     * @return Boolean\n     */\n    function isInterleave($s1, $s2, $s3) {\n        $len1 = strlen($s1);\n        $len2 = strlen($s2);\n        $len3 = strlen($s3);\n\n        // If the lengths don't match, s3 cannot be an interleaving\n        if ($len1 + $len2 != $len3) {\n            return false;\n        }\n\n        // Initialize a DP table\n        $dp = array_fill(0, $len1 + 1, array_fill(0, $len2 + 1, false));\n        $dp[0][0] = true;\n\n        // Fill the DP table\n        for ($i = 0; $i <= $len1; $i++) {\n            for ($j = 0; $j <= $len2; $j++) {\n                $k = $i + $j - 1;\n\n                if ($i > 0 && $s1[$i - 1] == $s3[$k]) {\n                    $dp[$i][$j] = $dp[$i][$j] || $dp[$i - 1][$j];\n                }\n\n                if ($j > 0 && $s2[$j - 1] == $s3[$k]) {\n                    $dp[$i][$j] = $dp[$i][$j] || $dp[$i][$j - 1];\n                }\n            }\n        }\n\n        return $dp[$len1][$len2];\n    }\n}"
+            }
+        ]
+    },
+    "Triangle": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int minSUM(int row, vector<vector<int>>& triangle, vector<vector<int>>& dp, int index) {\n        if (row == triangle.size()-1) return triangle[row][index];\n\n        if (dp[row][index] != INT_MIN) {\n            return dp[row][index];\n        }\n\n        return dp[row][index] = triangle[row][index]+min(minSUM(row + 1, triangle, dp, index), minSUM(row + 1, triangle, dp, index + 1));\n    }\n\n    int minimumTotal(vector<vector<int>>& triangle) {\n        vector<vector<int>> dp(triangle.size(), vector<int>(triangle.size() + 1, INT_MIN));\n        return minSUM(0, triangle, dp, 0);\n    }\n};\n"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def minimumTotal(self, triangle: List[List[int]]) -> int:\n        row = len(triangle)\n        memo = triangle[row-1].copy()\n\n        for r in range(row-2, -1, -1):\n            for c in range(r+1):\n                memo[c] = min(memo[c], memo[c+1]) + triangle[r][c]\n        \n        return memo[0]"
+            }
+        ]
+    },
+    "Longest Consecutive Sequence": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def longestConsecutive(self, nums: List[int]) -> int:\n        num_set = set(nums)\n        longest = 0\n\n        for n in nums:\n            if n - 1 not in num_set:\n                length = 1\n\n                while n + length in num_set:\n                    length += 1\n                \n                longest = max(longest, length)\n        \n        return longest"
+            },
+            {
+                "language": "Python",
+                "code": "/*\n\n    Time Complexity : O(N^3), The outer loop runs exactly N times, and because currentNumber increments by 1\n    during each iteration of the while loop, it runs in O(N) time. Then, on each iteration of the while loop, an\n    O(N) operation in the array is performed. Therefore, this brute force algorithm is really three nested O(N)\n    loops, which compound multiplicatively to a cubic runtime. Where N is the size of the Array(nums).\n\n    Space Complexity : O(1), Constant space.\n\n    Using Array(Three Nested Loop). Brute Force Approach.\n\n    Note : This will give TLE.\n\n*/\n\n\n/***************************************** Approach 1 Code *****************************************/\n\nclass Solution {\nprivate: \n    bool longestConsecutive(vector<int>& nums, int target){\n        int n = nums.size();\n        for(int i=0; i<n; i++){\n            if(nums[i] == target){\n                return true;\n            }\n        }\n        return false;\n    }\npublic:\n    int longestConsecutive(vector<int>& nums) {\n        int n = nums.size();\n        int longestConsecutiveSequence = 0;\n        for(auto num : nums){\n            int currentNumber = num;\n            int currentConsecutiveSequence = 1;\n            while(longestConsecutive(nums, currentNumber+1)){\n                currentNumber += 1;\n                currentConsecutiveSequence += 1;\n            }\n            longestConsecutiveSequence = max(longestConsecutiveSequence, currentConsecutiveSequence);\n        }\n        return longestConsecutiveSequence;\n    }\n};\n\n\n\n\n\n\n/*\n\n    Time Complexity : O(NlogN), The main for loop does constant work N times, so the algorithm's time complexity\n    is dominated by the invocation of sorting algorithm, which will run in O(NlogN) time for any sensible\n    implementation. Where N is the size of the Array(nums).\n\n    Space Complexity : O(1), For the implementations provided here, the space complexity is constant because we\n    sort the input array in place.\n\n    Solved using Array + Sorting. Brute Better Approach.\n\n*/\n\n\n/***************************************** Approach 2 Code *****************************************/\n\nclass Solution {\npublic:\n    int longestConsecutive(vector<int>& nums) {\n        int n = nums.size();\n        if(n == 0){\n            return 0;\n        }\n        sort(nums.begin(), nums.end());\n        int currentConsecutiveSequence = 1;\n        int longestConsecutiveSequence = 0;\n        for(int i=1; i<n; i++){\n            if(nums[i] != nums[i-1]){\n                if(nums[i] == nums[i-1] + 1){\n                    currentConsecutiveSequence++;\n                }\n                else{\n                    longestConsecutiveSequence = max(longestConsecutiveSequence, currentConsecutiveSequence);\n                    currentConsecutiveSequence = 1;\n                }\n            }\n        }\n        return max(longestConsecutiveSequence, currentConsecutiveSequence);\n    }\n};\n\n\n\n\n\n\n/*\n\n    Time Complexity : O(N), We are traversing the Array(nums) thrice which creates the time complexity O(N)\n    becuase Unordered map operating takes constant time. Where N is the size of the Array(nums).\n\n    Space Complexity : O(N), Unordered map space.\n\n    Solved using Array + Hash Table(Unordered map). Optimize Approach.\n\n*/\n\n\n/***************************************** Approach 3 Code *****************************************/\n\nclass Solution {\npublic:\n    int longestConsecutive(vector<int>& nums) {\n        unordered_map<int, bool> map;\n        for(int i = 0; i<nums.size(); i++){\n            map[nums[i]] = true;\n        }\n        for(int i=0; i<nums.size(); i++){\n            if(map.count(nums[i]-1) > 0){\n                map[nums[i]] = false;\n            }\n        }\n        int maxlen = 0;\n        for(int i=0; i<nums.size(); i++){\n            if(map[nums[i]] == true){\n                int j=0; int count=0;\n                while(map.count(nums[i]+j) > 0){\n                    j++;\n                    count++;\n                }\n                if(count>maxlen){\n                    maxlen = count;\n                }\n            }\n        }\n        return maxlen;\n    }\n};\n\n\n\n\n\n\n/*\n\n    Time Complexity : O(N), Although the time complexity appears to be quadratic due to the while loop nested\n    within the for loop, closer inspection reveals it to be linear. Because the while loop is reached only when\n    marks the beginning of a sequence (i.e. currentNumber-1 is not present in nums), the while loop can only run\n    for N iterations throughout the entire runtime of the algorithm. This means that despite looking like O(N^2)\n    complexity, the nested loops actually run in O(N+N)=O(N) time. All other computations occur in constant\n    time, so the overall runtime is linear. Where N is the size of the Array(nums).\n\n    Space Complexity : O(N), Unordered set space.\n\n    Solved using Array + Hash Table(Unordered set). Optimise Approach.\n\n*/\n\n\n/***************************************** Approach 4 Code *****************************************/\n\nclass Solution {\npublic:\n    int longestConsecutive(vector<int>& nums) {\n        unordered_set<int> set;\n        for(int num : nums){\n            set.insert(num);\n        }\n        int longestConsecutiveSequence = 0;\n        for(int num : nums){\n            if(set.find(num-1) == set.end()){\n                int currentNumber = num;\n                int currentConsecutiveSequence = 1;\n                while(set.find(currentNumber+1) != set.end()){\n                    currentNumber++;\n                    currentConsecutiveSequence++;\n                }\n                longestConsecutiveSequence = max(longestConsecutiveSequence, currentConsecutiveSequence);\n            }\n        }\n        return longestConsecutiveSequence;\n    }\n};"
+            }
+        ]
+    },
+    "Gas Station": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:\n        if sum(gas) < sum(cost):\n            return -1\n                \n        curernt_gas = 0\n        start = 0\n        for i in range(len(gas)):\n            curernt_gas += gas[i] - cost[i]\n            if curernt_gas < 0:\n                curernt_gas = 0\n                start = i + 1\n\n        return start"
+            },
+            {
+                "language": "Python",
+                "code": "{\n        int n = gas.length;\n        for(int i = 0; i < n; i++){\n            int totalFuel = 0;\n            int stopCount = 0, j = i;\n            while(stopCount < n){\n                totalFuel += gas[j % n] - cost[j % n];\n                if(totalFuel < 0) break; // whenever we reach -ve\n                stopCount++;\n                j++;\n            }\n            if(stopCount == n && totalFuel >= 0) return i; // cover all the stops & our fuel left is 0 or more than that\n        }\n        return -1;"
+            }
+        ]
+    },
+    "Word Break": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    bool solve(int index,string &s,unordered_map<string,bool>&map,vector<int>&dp)\n    {\n        if(index >= s.length())\n        {\n            return true;\n        }\n        string str = s.substr(index,s.length()-index+1);\n        if(map.find(str) != map.end())\n        {\n            return true;\n        }\n        if(dp[index] != -1)\n        {\n            return dp[index];\n        }\n\n        for(int i = 1;i<=s.length();i++)\n        {\n            string str = s.substr(index,i);\n            if(map.find(str) != map.end() && solve(index+i,s,map,dp))\n            {\n                return dp[index+i] = 1;\n            }\n        }\n        return dp[index] = 0;\n    }\n    bool wordBreak(string s, vector<string>& wordDict) {\n        unordered_map<string,bool>map;\n        for(auto word:wordDict)\n        {\n            map[word] = true;\n        }\n        vector<int>dp(301,-1);\n        return solve(0,s,map,dp);\n    }\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def wordBreak(self, s: str, wordDict: List[str]) -> bool:\n        dp = [True] + [False] * len(s)\n\n        for i in range(1, len(s) + 1):\n            for w in wordDict:\n                start = i - len(w)\n                if start >= 0 and dp[start] and s[start:i] == w:\n                    dp[i] = True\n                    break\n        \n        return dp[-1]"
+            }
+        ]
+    },
+    "Evaluate Reverse Polish Notation": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def evalRPN(self, tokens: List[str]) -> int:\n        st = []\n\n        for c in tokens:\n            if c == \"+\":\n                st.append(st.pop() + st.pop())\n            elif c == \"-\":\n                second, first = st.pop(), st.pop()\n                st.append(first - second)\n            elif c == \"*\":\n                st.append(st.pop() * st.pop())\n            elif c == \"/\":\n                second, first = st.pop(), st.pop()\n                st.append(int(first / second))                \n            else:\n                st.append(int(c))\n        \n        return st[0]"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def evalRPN(self, tokens: List[str]) -> int:\n        stack = []\n        for token in tokens:\n            match token:\n                case '+':\n                    stack.append(stack.pop() + stack.pop())\n                    continue\n                case '*':\n                    stack.append(stack.pop() * stack.pop())\n                    continue\n                case '-':\n                    a, b = stack.pop(), stack.pop()\n                    stack.append(b - a)\n                    continue\n                case '/':\n                    a, b = stack.pop(), stack.pop()\n                    stack.append(int(b/a))\n                    continue\n                case _:\n                    stack.append(int(token))\n        return stack.pop()\n"
+            }
+        ]
+    },
+    "Reverse Words in a String": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def reverseWords(self, s: str) -> str:\n        words = s.split()\n        res = []\n\n        for i in range(len(words) - 1, -1, -1):\n            res.append(words[i])\n            if i != 0:\n                res.append(\" \")\n\n        return \"\".join(res)"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    string reverseWords(string s) {\n        reverse(s.begin(), s.end());\n        int n = s.size();\n        int left = 0;\n        int right = 0;\n        int i = 0;\n        while (i < n) {\n            while (i < n && s[i] == ' ')\n                i++;\n            if (i == n)\n                break;\n            while (i < n && s[i] != ' ') {\n                s[right++] = s[i++];\n            }\n            reverse(s.begin() + left, s.begin() + right);\n            s[right++] = ' ';\n            left = right;\n            i++;\n        }\n        s.resize(right - 1);\n        return s;\n    }\n};"
+            }
+        ]
+    },
+    "Find Minimum in Rotated Sorted Array": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def findMin(self, nums: List[int]) -> int:\n    \n        left = 0\n        right = len(nums) - 1\n\n        while left < right:\n            mid = (left + right) // 2\n\n            if nums[mid] <= nums[right]:\n                right = mid\n            else:\n                left = mid + 1\n        \n        return nums[left]"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def findMin(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        # set left and right bounds\n        left, right = 0, len(nums)-1\n                \n        # left and right both converge to the minimum index;\n        # DO NOT use left <= right because that would loop forever\n        while left < right:\n            # find the middle value between the left and right bounds (their average);\n\t\t\t# can equivalently do: mid = left + (right - left) // 2,\n\t\t\t# if we are concerned left + right would cause overflow (which would occur\n\t\t\t# if we are searching a massive array using a language like Java or C that has\n\t\t\t# fixed size integer types)\n            mid = (left + right) // 2\n                        \n            # the main idea for our checks is to converge the left and right bounds on the start\n            # of the pivot, and never disqualify the index for a possible minimum value.\n\n            # in normal binary search, we have a target to match exactly,\n            # and would have a specific branch for if nums[mid] == target.\n            # we do not have a specific target here, so we just have simple if/else.\n                        \n            if nums[mid] > nums[right]:\n                # we KNOW the pivot must be to the right of the middle:\n                # if nums[mid] > nums[right], we KNOW that the\n                # pivot/minimum value must have occurred somewhere to the right\n                # of mid, which is why the values wrapped around and became smaller.\n\n                # example:  [3,4,5,6,7,8,9,1,2] \n                # in the first iteration, when we start with mid index = 4, right index = 9.\n                # if nums[mid] > nums[right], we know that at some point to the right of mid,\n                # the pivot must have occurred, which is why the values wrapped around\n                # so that nums[right] is less then nums[mid]\n\n                # we know that the number at mid is greater than at least\n                # one number to the right, so we can use mid + 1 and\n                # never consider mid again; we know there is at least\n                # one value smaller than it on the right\n                left = mid + 1\n\n            else:\n                # here, nums[mid] <= nums[right]:\n                # we KNOW the pivot must be at mid or to the left of mid:\n                # if nums[mid] <= nums[right], we KNOW that the pivot was not encountered\n                # to the right of middle, because that means the values would wrap around\n                # and become smaller (which is caught in the above if statement).\n                # this leaves the possible pivot point to be at index <= mid.\n                            \n                # example: [8,9,1,2,3,4,5,6,7]\n                # in the first iteration, when we start with mid index = 4, right index = 9.\n                # if nums[mid] <= nums[right], we know the numbers continued increasing to\n                # the right of mid, so they never reached the pivot and wrapped around.\n                # therefore, we know the pivot must be at index <= mid.\n\n                # we know that nums[mid] <= nums[right].\n                # therefore, we know it is possible for the mid index to store a smaller\n                # value than at least one other index in the list (at right), so we do\n                # not discard it by doing right = mid - 1. it still might have the minimum value.\n                right = mid\n                \n        # at this point, left and right converge to a single index (for minimum value) since\n        # our if/else forces the bounds of left/right to shrink each iteration:\n\n        # when left bound increases, it does not disqualify a value\n        # that could be smaller than something else (we know nums[mid] > nums[right],\n        # so nums[right] wins and we ignore mid and everything to the left of mid).\n\n        # when right bound decreases, it also does not disqualify a\n        # value that could be smaller than something else (we know nums[mid] <= nums[right],\n        # so nums[mid] wins and we keep it for now).\n\n        # so we shrink the left/right bounds to one value,\n        # without ever disqualifying a possible minimum\n        return nums[left]"
+            }
+        ]
+    },
+    "Find Peak Element": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def findPeakElement(self, nums: List[int]) -> int:\n        left = 0\n        right = len(nums) - 1\n\n        while left < right:\n            mid = (left + right) // 2\n            if nums[mid] > nums[mid + 1]:\n                right = mid\n            else:\n                left = mid + 1\n\n        return left"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public int findPeakElement(int[] nums) {\n        int n = nums.length;\n        int ans = Integer.MIN_VALUE, max = Integer.MIN_VALUE, result = 0;\n        int left=0, right=n-1;\n        while(left <= right){\n            max = Math.max(nums[left], nums[right]);\n            ans = Math.max(ans, max);\n            if(nums[left] == ans) result = left;\n            else if(nums[right] == ans) result = right;\n            left++;\n            right--;\n        }\n        return result;\n    }\n}"
+            }
+        ]
+    },
+    "Maximum Gap": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution(object):\n    def maximumGap(self, nums):\n       self=0\n       l=len(nums)\n       if l<2:\n        return 0\n       list.sort(nums)\n       for i in range(1,l):\n        if self < nums[i]-nums[i-1]:\n            self= nums[i]-nums[i-1]\n\n       return self   \n\n       \n        "
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def maximumGap(self, nums):\n        lo, hi, n = min(nums), max(nums), len(nums)\n        if n <= 2 or hi == lo: return hi - lo\n        B = defaultdict(list)\n        for num in nums:\n            ind = n-2 if num == hi else (num - lo)*(n-1)//(hi-lo)\n            B[ind].append(num)\n            \n        cands = [[min(B[i]), max(B[i])] for i in range(n-1) if B[i]]\n        return max(y[0]-x[1] for x,y in zip(cands, cands[1:]))"
+            }
+        ]
+    },
+    "Median of Two Sorted Arrays": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": ""
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public double findMedianSortedArrays(int[] nums1, int[] nums2) {\n        int n1=nums1.length;\n        int n2=nums2.length;\n        int arr[]=new int[n1+n2];\n        int i=0,j=0,k=0;\n        int mid=(n1+n2+1)/2;\n        while(i<n1&&j<n2){\n            \n            if(nums1[i]>nums2[j])\n            {\n                arr[k]=nums2[j];\n                j++;\n                k++;\n            }\n            else\n            {\n                arr[k]=nums1[i];\n                i++;\n                k++;\n            }\n            if(k>mid){\n                break;\n            }\n        }\n        while(i<n1)\n        {\n            if(k>mid){\n                break;\n            }\n            arr[k]=nums1[i];\n            i++;\n            k++;\n        }\n        while(j<n2)\n        {\n            if(k>mid){\n                break;\n            }\n            arr[k]=nums2[j];\n            j++;\n            k++;\n        }\n        \n        if((n1+n2)%2!=0)\n        {\n            return arr[mid-1];\n        }\n        int a=(arr[(n1+n2)/2]+arr[(n1+n2)/2-1]);\n        double b= (double)a/2;\n        return b;\n    }\n}"
+            }
+        ]
+    },
+    "First Missing Positive": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def firstMissingPositive(self, nums: List[int]) -> int:\n        nums = [n for n in nums if n > 0]\n        nums.sort()\n\n        target = 1\n        for n in nums:\n            if n == target:\n                target += 1\n            elif n > target:\n                return target\n        \n        return target"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def firstMissingPositive(self, nums: List[int]) -> int:\n        # Function to swap elements in the array\n        def swap(arr, i, j):\n            arr[i], arr[j] = arr[j], arr[i]\n        \n        n = len(nums)\n        \n        # Place each positive integer i at index i-1 if possible\n        for i in range(n):\n            while 0 < nums[i] <= n and nums[i] != nums[nums[i] - 1]:\n                swap(nums, i, nums[i] - 1)\n        \n        # Find the first missing positive integer\n        for i in range(n):\n            if nums[i] != i + 1:\n                return i + 1\n        \n        # If all positive integers from 1 to n are present, return n + 1\n        return n + 1\n"
+            }
+        ]
+    },
+    "Permutation Sequence": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int solve(int n, int k, vector<int> &a){\n        if(n==1) return a[0];\n        int p=1,ans=0;\n        for(int i=1; i<n; i++) p*=i;\n        int q= k/(p), r=k%p;\n        if(r!=0) q++;\n        else r+=p;\n        q-=1;   // for idx. \n        ans+= a[q]* pow(10, n-1);\n        a.erase(a.begin()+q);\n        ans+= solve(n-1,r,a);\n        return ans;\n    }\n    string getPermutation(int n, int k) {\n        vector<int> vec;\n        for(int i=1; i<=n; i++) vec.push_back(i);\n        int num= solve(n,k,vec);\n        return to_string(num);\n    }\n};"
+            },
+            {
+                "language": "Python",
+                "code": "public class Solution {\npublic String getPermutation(int n, int k) {\n    int pos = 0;\n    List<Integer> numbers = new ArrayList<>();\n    int[] factorial = new int[n+1];\n    StringBuilder sb = new StringBuilder();\n    \n    // create an array of factorial lookup\n    int sum = 1;\n    factorial[0] = 1;\n    for(int i=1; i<=n; i++){\n        sum *= i;\n        factorial[i] = sum;\n    }\n    // factorial[] = {1, 1, 2, 6, 24, ... n!}\n    \n    // create a list of numbers to get indices\n    for(int i=1; i<=n; i++){\n        numbers.add(i);\n    }\n    // numbers = {1, 2, 3, 4}\n    \n    k--;\n    \n    for(int i = 1; i <= n; i++){\n        int index = k/factorial[n-i];\n        sb.append(String.valueOf(numbers.get(index)));\n        numbers.remove(index);\n        k-=index*factorial[n-i];\n    }\n    \n    return String.valueOf(sb);\n}"
+            }
+        ]
+    },
+    "Text Justification": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "/**\n * @param {string[]} words\n * @param {number} maxWidth\n * @return {string[]}\n */\nvar fullJustify = function (words, maxWidth) {\n  const res = [\n    {\n      // words in this line: \n      strs: [],\n      // save time by tracking\n      // total char count with\n      // min spaces included:\n      total: 0,\n    }\n  ]\n\n  // greedy approach:\n  for (const w of words) {\n    const prevLen = res[res.length - 1].total\n    const space = prevLen ? 1 : 0\n    const nextLen = prevLen + space + w.length\n\n    if (nextLen <= maxWidth) {\n      // if word fits, push and track new total:\n      res[res.length - 1].total = nextLen\n      res[res.length - 1].strs.push(w)\n    } else {\n      // start new line if needed:\n      res.push({\n        total: w.length,\n        strs: [w]\n      })\n    }\n  }\n\n  // add missing spaces and \n  // replace idx with result:\n  for (let i = 0; i < res.length - 1; i++) {\n    const listRef = res[i].strs\n\n    if (listRef.length === 1) {\n      // left align if only\n      // one word in line:\n      let str = res[i].strs.pop()\n      str += ' '.repeat(maxWidth - str.length)\n      res[i] = str\n    } else {\n      // add spaces in between \n      // words until justified:\n      let diff = maxWidth - res[i].total\n      let idx = 0\n      while (diff > 0) {\n        listRef[idx] += ' '\n        diff -= 1\n        idx = idx === listRef.length - 2 ? 0 : idx + 1\n      }\n      res[i] = res[i].strs.join(' ')\n    }\n  }\n\n\n  // always left align last slot:\n  let lastStr = res.at(-1).strs.join(' ')\n  lastStr += ' '.repeat(maxWidth - lastStr.length)\n  res[res.length - 1] = lastStr\n\n  return res\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def fullJustify(self, words: List[str], maxWidth: int) -> List[str]:\n        res = []\n        \n        cur_wlist  = []\n        cur_ch_cnt = 0   # for the space consideration\n     \n        for w in words: \n            if cur_ch_cnt + len(cur_wlist) + len(w) > maxWidth:\n                for i in range(maxWidth - cur_ch_cnt):  # insert space\n                    cur_wlist[i%(len(cur_wlist) - 1 or 1)] += ' '\n               \n                res.append(''.join(cur_wlist)) # insert a this row \n                cur_wlist, cur_ch_cnt = [], 0 # prepare a new row, resetting\n                \n            cur_wlist += [w]\n            cur_ch_cnt += len(w)\n            \n        return res + [' '.join(cur_wlist).ljust(maxWidth)]"
+            }
+        ]
+    },
+    "Minimum Window Substring": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "string minWindow(string s, string t) {\n        vector<int> map(128,0);\n        for(auto c: t) map[c]++;\n        int counter=t.size(), begin=0, end=0, d=INT_MAX, head=0;\n        while(end<s.size()){\n            if(map[s[end++]]-->0) counter--; //in t\n            while(counter==0){ //valid\n                if(end-begin<d)  d=end-(head=begin);\n                if(map[s[begin++]]++==0) counter++;  //make it invalid\n            }  \n        }\n        return d==INT_MAX? \"\":s.substr(head, d);\n    }"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def minWindow(self, s: str, t: str) -> str:\n        if len(s) < len(t):\n            return \"\"\n        \n        char_count = defaultdict(int)\n        for ch in t:\n            char_count[ch] += 1\n        \n        target_chars_remaining = len(t)\n        min_window = (0, float(\"inf\"))\n        start_index = 0\n\n        for end_index, ch in enumerate(s):\n            if char_count[ch] > 0:\n                target_chars_remaining -= 1\n            char_count[ch] -= 1\n\n            if target_chars_remaining == 0:\n                while True:\n                    char_at_start = s[start_index]\n                    if char_count[char_at_start] == 0:\n                        break\n                    char_count[char_at_start] += 1\n                    start_index += 1\n                \n                if end_index - start_index < min_window[1] - min_window[0]:\n                    min_window = (start_index, end_index)\n                \n                char_count[s[start_index]] += 1\n                target_chars_remaining += 1\n                start_index += 1\n        \n        return \"\" if min_window[1] > len(s) else s[min_window[0]:min_window[1]+1]"
+            }
+        ]
+    },
+    "Largest Rectangle in Histogram": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\nprivate:\n    // find next smallest element index\n    vector<int> nextSmallest(vector<int>& arr) {\n        int n = arr.size();\n        vector<int> ans(n);\n\n        // initialize a stack\n        stack<int> s;\n\n        for (int i = n - 1; i >= 0; i--) {\n            if (s.empty()) {\n                ans[i] = n;\n                s.push(i);\n            } else {\n                if (arr[i] > arr[s.top()]) {\n                    ans[i] = s.top();\n                    s.push(i);\n                } else {\n                    while (!s.empty() && arr[i] <= arr[s.top()]) {\n                        s.pop();\n                    }\n                    if (s.empty()) {\n                        ans[i] = n;\n                        s.push(i);\n                    } else {\n                        ans[i] = s.top();\n                        s.push(i);\n                    }\n                }\n            }\n        }\n        return ans;\n    }\n    // find previous smallest element index\n    vector<int> prevSmallest(vector<int>& arr) {\n        int n = arr.size();\n        vector<int> ans(n);\n\n        // initialize a stack\n        stack<int> s;\n\n        for (int i = 0; i < n; i++) {\n            if (s.empty()) {\n                ans[i] = -1;\n                s.push(i);\n            } else {\n                if (arr[i] > arr[s.top()]) {\n                    ans[i] = s.top();\n                    s.push(i);\n                } else {\n                    while (!s.empty() && arr[i] <= arr[s.top()]) {\n                        s.pop();\n                    }\n                    if (s.empty()) {\n                        ans[i] = -1;\n                        s.push(i);\n                    } else {\n                        ans[i] = s.top();\n                        s.push(i);\n                    }\n                }\n            }\n        }\n        return ans;\n    }\n\npublic:\n    int largestRectangleArea(vector<int>& heights) {\n        vector<int> prevSmallestIndex = prevSmallest(heights);\n        vector<int> nextSmallestIndex = nextSmallest(heights);\n        vector<int> area(heights.size());\n        for (int i = 0; i < heights.size(); i++) {\n            area[i] =\n                heights[i] * (nextSmallestIndex[i] - prevSmallestIndex[i] - 1);\n        }\n        return *max_element(begin(area), end(area));\n    }\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def largestRectangleArea(self, heights: List[int]) -> int:\n        stack = [-1]\n        max_area = 0\n\n        for i in range(len(heights)):\n            while stack[-1] != -1 and heights[i] <= heights[stack[-1]]:\n                height = heights[stack.pop()]\n                width = i - stack[-1] - 1\n                max_area = max(max_area, height * width)\n            stack.append(i)\n        \n        while stack[-1] != -1:\n            height = heights[stack.pop()]\n            width = len(heights) - stack[-1] - 1\n            max_area = max(max_area, height * width)\n        \n        return max_area"
+            }
+        ]
+    },
+    "Maximal Rectangle": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    int maximalRectangle(vector<vector<char>>& mat) {\n        int n=mat.size(), m=mat[0].size();\n        vector<vector<int>> v(n, vector<int> (m+1,0));\n        for(int i=0;i<n;++i){\n            for(int j=0;j<m;++j){\n                if(mat[i][j]=='0'){\n                    v[i][j]=0;\n                }\n                else v[i][j]=1;\n            }\n        }\n\n        for(int j=0;j<m;++j){\n            for(int i=0;i<n;++i){\n                if(i==0 or v[i][j]==0) continue;\n                v[i][j]+=v[i-1][j];\n            }\n        }\n        \n        int area=0;\n\n        for(int i=0;i<n;++i){\n            stack<int> s;\n            int j=0;\n            while(j<m+1){\n                if(s.empty() or v[i][s.top()]<=v[i][j]){\n                    s.push(j++);\n                }\n                else{\n                    int t=s.top();\n                    s.pop();\n                    area=max(area,v[i][t]*(s.empty()?j:(j-s.top()-1)));\n                }\n            }\n        }\n        return area;\n    }\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def maximalRectangle(self, matrix: List[List[str]]) -> int:\n        if not matrix:\n            return 0\n        \n        rows, cols = len(matrix), len(matrix[0])\n        heights = [0] * (cols + 1)  # Include an extra element for easier calculation\n        max_area = 0\n        \n        for row in matrix:\n            for i in range(cols):\n                heights[i] = heights[i] + 1 if row[i] == '1' else 0\n            \n            # Calculate max area using histogram method\n            n = len(heights)  # Number of bars in the histogram\n\n            for i in range(n):\n                for j in range(i, n):\n                    # Determine the minimum height between bar i and bar j\n                    min_height = min(heights[k] for k in range(i, j + 1))\n                    # Calculate the area of the rectangle\n                    area = min_height * (j - i + 1)\n                    # Update maximum area if the current rectangle's area is larger\n                    if area > max_area:\n                        max_area = area\n\n        return max_area\n        "
+            }
+        ]
+    },
+    "Scramble String": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n    unordered_map<string, bool> dp;\n\n    bool helper(string s1, string s2){\n        string key = s1 + \" \" + s2;\n\n        if(s1 == s2){\n            return dp[key] = true;\n        }\n        if(s1.size() <= 1 || s2.size() <= 1 || s1.size() != s2.size()){\n            return false;\n        }\n        if(dp.find(key) != dp.end()){\n            return dp[key];\n        }\n\n        int n = s2.size();\n        for(int i=1; i<n; i++){\n            bool with_swap = helper(s1.substr(0, i), s2.substr(n-i)) && helper(s1.substr(i), s2.substr(0, n-i));\n            bool without_swap = helper(s1.substr(0, i), s2.substr(0, i)) && helper(s1.substr(i), s2.substr(i));\n            \n            if(with_swap || without_swap){\n                return dp[key] = true;\n            }\n        }\n\n        return dp[key] = false;\n    }\n\npublic:\n    bool isScramble(string s1, string s2){\n        vector<int> freq(26, 0);\n        for(int i=0; i<s1.size(); i++){\n            freq[s1[i]-'a']++;\n            freq[s2[i]-'a']--;\n        }\n\n        for(int i: freq){\n            if(i != 0){\n                return false;\n            }\n        }\n\n        return helper(s1, s2);\n    }\n};"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution(object):\n    def isScramble(self, s1, s2):\n        \"\"\"\n        :type s1: str\n        :type s2: str\n        :rtype: bool\n        \"\"\"\n        # Base cases\n\n        n = len(s1)\n\n        # If both strings are not equal in size\n        if len(s2) != n:\n            return False\n\n        # If both strings are equal\n        if s1 == s2:\n            return True\n\n        # If code is reached to this condition then following this are sure:\n        # 1. size of both string is equal\n        # 2. string are not equal\n        # so size is equal (where size==1) and they are not equal then obviously false\n        # example 'a' and 'b' size is equal, string are not equal\n        if n == 1:\n            return False\n\n        key = s1 + \" \" + s2\n\n        # Check if this problem has already been solved\n        if key in self.mp:\n            return self.mp[key]\n\n        # For every iteration it can two condition\n        # 1. We should proceed without swapping\n        # 2. We should swap before looking next\n        for i in range(1, n):\n            # ex of without swap: gr|eat and rg|eat\n            without_swap = (\n                # Left part of first and second string\n                self.isScramble(s1[:i], s2[:i])\n                and\n                # Right part of first and second string;\n                self.isScramble(s1[i:], s2[i:])\n            )\n\n            # If without swap gives us the right answer then we do not need\n            # to call the recursion with swap\n            if without_swap:\n                return True\n\n            # ex of with swap: gr|eat rge|at\n            # here we compare \"gr\" with \"at\" and \"eat\" with \"rge\"\n            with_swap = (\n                # Left part of first and right part of second\n                self.isScramble(s1[:i], s2[n-i:])\n                and\n                # Right part of first and left part of second\n                self.isScramble(s1[i:], s2[:n-i])\n            )\n\n            # If with swap gives us the right answer then we return True\n            # otherwise, the for loop does its work\n            if with_swap:\n                return True\n\n        self.mp[key] = False\n        return False\n\n    # for storing already solved problems\n    mp = {}\n"
+            }
+        ]
+    },
+    "Distinct Subsequences": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n    vector<vector<int>> dp;\n    int helper(string& s, string& t, int i, int j){\n        if(i == s.size() and j == t.size()){\n            return 1;\n        }\n        if(i >= s.size()){\n            return 0;\n        }\n\n        if(dp[i][j] != -1){\n            return dp[i][j];\n        }\n\n\n        int not_take = helper(s, t, i+1, j);\n        int take = 0;\n        if(s[i] == t[j]){\n            take = helper(s, t, i+1, j+1);\n        }\n\n        return dp[i][j] = take + not_take;\n    }\npublic:\n    int numDistinct(string s, string t) {\n        int n = s.size();\n        int m = t.size();\n        dp.resize(n+1, vector<int>(m+1, -1));\n        return helper(s, t, 0, 0);\n    }\n};\n\n\n\n/*\nTC: O(S + 2^T)\n\nint helper(string& s, string& t, int i, int j){\n    if(i == s.size() and j == t.size()){\n        return 1;\n    }\n    if(i >= s.size()){\n        return 0;\n    }\n\n\n    int not_take = helper(s, t, i+1, j);\n    int take = 0;\n    if(s[i] == t[j]){\n        take = helper(s, t, i+1, j+1);\n    }\n\n    return take + not_take;\n}\n\nint numDistinct(string s, string t) {\n    return helper(s, t, 0, 0);\n}\n\n*/"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    int solve(int index1,int index2,string &str1,string &str2){\n        if(index2<0){\n            return 1;\n        }\n        if(index1<0){\n            return 0;\n        }\n        if(str1[index1]==str2[index2]){\n            return solve(index1-1,index2-1,str1,str2)+solve(index1-1,index2,str1,str2);\n        }\n        return solve(index1-1,index2,str1,str2);\n    }\npublic:\n    int numDistinct(string s, string t) {\n        int n1=s.size();\n        int n2=t.size();\n        return solve(n1-1,n2-1,s,t);\n    }\n};"
+            }
+        ]
+    },
+    "Best Time to Buy and Sell Stock III": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": ""
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def solve(self, index, buy, cnt, n, prices):\n        if index == n or cnt == 0:\n            return 0\n        profit = 0\n        if buy:\n            pick = -prices[index] + self.solve(index + 1, False, cnt, n, prices)\n            notPick = self.solve(index + 1, True, cnt, n, prices)\n            profit = max(pick, notPick)\n        else:\n            pick = prices[index] + self.solve(index + 1, True, cnt - 1, n, prices)\n            notPick = self.solve(index + 1, False, cnt, n, prices)\n            profit = max(pick, notPick)\n        return profit\n\n    def maxProfit(self, prices):\n        n = len(prices)\n        return self.solve(0, True, 2, n, prices)\n"
+            }
+        ]
+    },
+    "Word Ladder": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": ""
+            },
+            {
+                "language": "Python",
+                "code": "from collections import deque\n\nclass Solution:\n    def ladderLength(self, beginWord: str, endWord: str, wordList: list) -> int:\n        wordSet = set(wordList)  # Convert list to set for fast lookup\n        if endWord not in wordSet:\n            return 0\n\n        queue = deque([(beginWord, 1)])  # BFS queue storing (word, steps)\n\n        while queue:\n            word, steps = queue.popleft()\n\n            if word == endWord:\n                return steps\n\n            for i in range(len(word)):\n                original = word[i]\n                for ch in range(26):  # Check all possible single character changes\n                    transformed = word[:i] + chr(ord('a') + ch) + word[i + 1:]\n                    if transformed in wordSet:\n                        wordSet.remove(transformed)  # Avoid revisiting\n                        queue.append((transformed, steps + 1))\n        \n        return 0  # If no valid transformation is found\n"
+            }
+        ]
+    },
+    "Candy": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def candy(self, ratings: List[int]) -> int:\n        n = len(ratings)\n        total_candies = n\n        i = 1\n\n        while i < n:\n            if ratings[i] == ratings[i - 1]:\n                i += 1\n                continue\n\n            current_peak = 0\n            while i < n and ratings[i] > ratings[i - 1]:\n                current_peak += 1\n                total_candies += current_peak\n                i += 1\n            \n            if i == n:\n                return total_candies\n\n            current_valley = 0\n            while i < n and ratings[i] < ratings[i - 1]:\n                current_valley += 1\n                total_candies += current_valley\n                i += 1\n\n            total_candies -= min(current_peak, current_valley)\n\n        return total_candies"
+            },
+            {
+                "language": "Python",
+                "code": ""
+            }
+        ]
+    },
+    "Word Break II": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    \n"
+            },
+            {
+                "language": "Python",
+                "code": "def fun(s,dc,memo):\n    if(s in memo):\n        return memo[s]\n    ans=[]\n    if(dc[s]==1):\n        ans=[s]\n    for i in range(1,len(s)):\n        if(dc[s[:i]]==1):\n            a=fun(s[i:],dc,memo)\n            for x in a:\n                ans.append(s[:i]+\" \"+x)\n    memo[s]=ans\n    return ans\nclass Solution:\n    def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:\n        dc=defaultdict(lambda:0)\n        for a in wordDict:\n            dc[a]=1\n        return(fun(s,dc,{}))"
+            }
+        ]
+    },
+    "Find Minimum in Rotated Sorted Array II": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": ""
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    public int findMin(int[] nums) {\n        int start  = 0;\n        int end = nums.length - 1;\n        if(nums[start] < nums[end])\n            return nums[start];\n        \n        while(start < end){\n            final int mid = start + (end - start) / 2;\n\n            if(nums[mid] < nums[end])\n                end = mid;\n            else if(nums[mid] > nums[end])\n                start = mid + 1;\n            else\n                end-- ; // when nums[mid] == nums[end]\n        }\n        return nums[end];\n    }\n}"
+            }
+        ]
+    },
+    "Best Time to Buy and Sell Stock IV": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class DoubleLinkListNode:\n    def __init__(self, ind, pre = None, next = None):\n        self.ind = ind\n        self.pre = pre if pre else self\n        self.next = next if next else self\n\nclass Solution:\n    def MinMaxList(self, arr: List[int]) -> List[int]:\n        n = len(arr)\n        if n == 0:\n            return []\n        sign = -1\n        res = [9999]\n        for num in arr:\n            if num * sign > res[-1] * sign:\n                res[-1] = num\n            else:\n                res.append(num)\n                sign *= -1\n        if len(res) & 1:\n            res.pop()\n        return res\n    def maxProfit(self, k: int, prices: List[int]) -> int:\n        newP = self.MinMaxList(prices)\n        n = len(newP)\n        m = n // 2\n        res = 0\n        for i in range(m):\n            res += newP[i*2+1] - newP[i*2]\n        if m <= k:\n            return res\n        head, tail = DoubleLinkListNode(-1), DoubleLinkListNode(-1)\n        NodeList = [DoubleLinkListNode(0, head)]\n        for i in range(1, n):\n            NodeList.append(DoubleLinkListNode(i, NodeList[-1]))\n            NodeList[i-1].next = NodeList[i]\n        NodeList[n-1].next = tail\n        head.next, tail.pre = NodeList[0], NodeList[n-1]\n        heap = []\n        for i in range(n-1):\n            if i&1:\n                heappush(heap, [newP[i] - newP[i+1], i, i+1, 0])\n            else:\n                heappush(heap, [newP[i+1] - newP[i], i, i+1, 1])\n        while m > k:\n            loss, i, j, t = heappop(heap)\n            if NodeList[i] == None or NodeList[j] == None: continue\n            m -= 1\n            res -= loss\n            nodei, nodej = NodeList[i], NodeList[j]\n            nodel, noder = nodei.pre, nodej.next\n            l, r = nodel.ind, noder.ind\n            valL, valR = newP[l], newP[r]\n            noder.pre, nodel.next = nodel, noder\n            NodeList[i], NodeList[j] = None, None\n            if t == 0:\n                heappush(heap, [valR - valL, l, r, 1])\n            elif l != -1 and r != -1:\n                heappush(heap, [valL - valR, l, r, 0])\n        return res"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\n    int solve(int index,int buy,int cnt,int n,vector<int> &prices){\n        if(index==n){\n            return 0;\n        }\n        if(cnt==0){\n            return 0;\n        }\n        int profit=0;\n        if(buy){\n            int pick=-prices[index]+solve(index+1,false,cnt,n,prices);\n            int notPick=0+solve(index+1,true,cnt,n,prices);\n            profit=max(pick,notPick);\n        }\n        else{\n            int pick=prices[index]+solve(index+1,true,cnt-1,n,prices);\n            int notPick=0+solve(index+1,false,cnt,n,prices);\n            profit=max(pick,notPick);\n        }\n        return profit;\n    }\npublic:\n    int maxProfit(int k, vector<int>& prices) {\n        int n=prices.size();\n        return solve(0,true,k,n,prices);\n    }\n};"
+            }
+        ]
+    },
+    "The Skyline Problem": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "from sortedcontainers import SortedList\nclass Solution:\n    def getSkyline(self, buildings: List[List[int]]) -> List[List[int]]:\n        if len(buildings) == 0: \n            return []\n        \n        buildings.sort(key=lambda v: v[2])\n        pos, height = [0], [0]\n        for left, right, h in buildings: \n            i = bisect_left(pos, left)\n            j = bisect_right(pos, right)\n            height[i:j] = [h, height[j-1]]\n            pos[i:j] = [left, right]\n        print(height, pos)\n        res = []\n        prev = 0\n        for v, h in zip(pos, height): \n            if h != prev:\n                res.append([v,h]) \n                prev = h\n                \n        return res"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution {\npublic:\n    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {\n        vector<vector<int>> ans;\n        multiset<int> pq{0};\n        \n        vector<pair<int, int>> points;\n        \n        for(auto b: buildings){\n            points.push_back({b[0], -b[2]});\n            points.push_back({b[1], b[2]});\n        }\n        \n        sort(points.begin(), points.end());\n        \n        int ongoingHeight = 0;\n        \n        // points.first = x coordinate, points.second = height\n        for(int i = 0; i < points.size(); i++){\n            int currentPoint = points[i].first;\n            int heightAtCurrentPoint = points[i].second;\n            \n            if(heightAtCurrentPoint < 0){\n                pq.insert(-heightAtCurrentPoint);\n            } else {\n                pq.erase(pq.find(heightAtCurrentPoint));\n            }\n            \n            // after inserting/removing heightAtI, if there's a change\n            auto pqTop = *pq.rbegin();\n            if(ongoingHeight != pqTop){\n                ongoingHeight = pqTop;\n                ans.push_back({currentPoint, ongoingHeight});\n            }\n        }\n        \n        return ans;\n    }\n};"
+            }
+        ]
+    },
+    "Basic Calculator": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution {\n\n    /**\n     * @param String $s\n     * @return Integer\n     */\n    function calculate($s) {\n        $stack = [];\n        $result = 0;\n        $currentNumber = 0;\n        $sign = 1; // 1 for positive, -1 for negative\n\n        for ($i = 0; $i < strlen($s); $i++) {\n            $char = $s[$i];\n\n            if (ctype_digit($char)) {\n                // Build the current number (handle multi-digit numbers)\n                $currentNumber = $currentNumber * 10 + intval($char);\n            } elseif ($char === '+') {\n                // Apply the current number with its sign\n                $result += $sign * $currentNumber;\n                $currentNumber = 0;\n                $sign = 1; // Set sign for the next number\n            } elseif ($char === '-') {\n                // Apply the current number with its sign\n                $result += $sign * $currentNumber;\n                $currentNumber = 0;\n                $sign = -1; // Set sign for the next number\n            } elseif ($char === '(') {\n                // Push the current result and sign onto the stack\n                array_push($stack, $result);\n                array_push($stack, $sign);\n                $result = 0;\n                $sign = 1; // Reset for the inner expression\n            } elseif ($char === ')') {\n                // Apply the current number with its sign\n                $result += $sign * $currentNumber;\n                $currentNumber = 0;\n\n                // Pop the sign and previous result from the stack\n                $result *= array_pop($stack); // Apply the sign\n                $result += array_pop($stack); // Add the previous result\n            }\n        }\n\n        // Add the last number\n        $result += $sign * $currentNumber;\n\n        return $result;\n    }\n}"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def calculate(self, s):\n        def update(op, v):\n            if op == \"+\": stack.append(v)\n            if op == \"-\": stack.append(-v)\n            if op == \"*\": stack.append(stack.pop() * v)           #for BC II and BC III\n            if op == \"/\": stack.append(int(stack.pop() / v))      #for BC II and BC III\n    \n        it, num, stack, sign = 0, 0, [], \"+\"\n        \n        while it < len(s):\n            if s[it].isdigit():\n                num = num * 10 + int(s[it])\n            elif s[it] in \"+-*/\":\n                update(sign, num)\n                num, sign = 0, s[it]\n            elif s[it] == \"(\":                                        # For BC I and BC III\n                num, j = self.calculate(s[it + 1:])\n                it = it + j\n            elif s[it] == \")\":                                        # For BC I and BC III\n                update(sign, num)\n                return sum(stack), it + 1\n            it += 1\n        update(sign, num)\n        return sum(stack)"
+            }
+        ]
+    },
+    "Sliding Window Maximum": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": ""
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:\n        res = []\n        q = deque()\n\n        for idx, num in enumerate(nums):\n            while q and q[-1] < num:\n                q.pop()\n            q.append(num)\n\n            if idx >= k and nums[idx - k] == q[0]:\n                q.popleft()\n            \n            if idx >= k - 1:\n                res.append(q[0])\n        \n        return res"
+            }
+        ]
+    },
+    "Expression Add Operators": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "public class Solution {\n    public List<String> addOperators(String num, int target) {\n        List<String> rst = new ArrayList<String>();\n        if(num == null || num.length() == 0) return rst;\n        helper(rst, \"\", num, target, 0, 0, 0);\n        return rst;\n    }\n    public void helper(List<String> rst, String path, String num, int target, int pos, long eval, long multed){\n        if(pos == num.length()){\n            if(target == eval)\n                rst.add(path);\n            return;\n        }\n        for(int i = pos; i < num.length(); i++){\n            if(i != pos && num.charAt(pos) == '0') break;\n            long cur = Long.parseLong(num.substring(pos, i + 1));\n            if(pos == 0){\n                helper(rst, path + cur, num, target, i + 1, cur, cur);\n            }\n            else{\n                helper(rst, path + \"+\" + cur, num, target, i + 1, eval + cur , cur);\n                \n                helper(rst, path + \"-\" + cur, num, target, i + 1, eval -cur, -cur);\n                \n                helper(rst, path + \"*\" + cur, num, target, i + 1, eval - multed + multed * cur, multed * cur );\n            }\n        }\n    }\n}"
+            },
+            {
+                "language": "Python",
+                "code": ""
+            }
+        ]
+    },
+    "Remove Invalid Parentheses": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "public List<String> removeInvalidParentheses(String s) {\n    List<String> ans = new ArrayList<>();\n    remove(s, ans, 0, 0, new char[]{'(', ')'});\n    return ans;\n}\n\npublic void remove(String s, List<String> ans, int last_i, int last_j,  char[] par) {\n    for (int stack = 0, i = last_i; i < s.length(); ++i) {\n        if (s.charAt(i) == par[0]) stack++;\n        if (s.charAt(i) == par[1]) stack--;\n        if (stack >= 0) continue;\n        for (int j = last_j; j <= i; ++j)\n            if (s.charAt(j) == par[1] && (j == last_j || s.charAt(j - 1) != par[1]))\n                remove(s.substring(0, j) + s.substring(j + 1, s.length()), ans, i, j, par);\n        return;\n    }\n    String reversed = new StringBuilder(s).reverse().toString();\n    if (par[0] == '(') // finished left to right\n        remove(reversed, ans, 0, 0, new char[]{')', '('});\n    else // finished right to left\n        ans.add(reversed);\n}"
+            },
+            {
+                "language": "Python",
+                "code": "public class Solution {\n    public List<String> removeInvalidParentheses(String s) {\n      List<String> res = new ArrayList<>();\n      \n      // sanity check\n      if (s == null) return res;\n      \n      Set<String> visited = new HashSet<>();\n      Queue<String> queue = new LinkedList<>();\n      \n      // initialize\n      queue.add(s);\n      visited.add(s);\n      \n      boolean found = false;\n      \n      while (!queue.isEmpty()) {\n        s = queue.poll();\n        \n        if (isValid(s)) {\n          // found an answer, add to the result\n          res.add(s);\n          found = true;\n        }\n      \n        if (found) continue;\n      \n        // generate all possible states\n        for (int i = 0; i < s.length(); i++) {\n          // we only try to remove left or right paren\n          if (s.charAt(i) != '(' && s.charAt(i) != ')') continue;\n        \n          String t = s.substring(0, i) + s.substring(i + 1);\n        \n          if (!visited.contains(t)) {\n            // for each state, if it's not visited, add it to the queue\n            queue.add(t);\n            visited.add(t);\n          }\n        }\n      }\n      \n      return res;\n    }\n    \n    // helper function checks if string s contains valid parantheses\n    boolean isValid(String s) {\n      int count = 0;\n    \n      for (int i = 0; i < s.length(); i++) {\n        char c = s.charAt(i);\n        if (c == '(') count++;\n        if (c == ')' && count-- == 0) return false;\n      }\n    \n      return count == 0;\n    }\n}"
             }
         ]
     }
