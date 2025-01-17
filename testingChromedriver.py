@@ -50,21 +50,12 @@ class LeetCodeScraper:
         """
         self.driver.get(link)
 
-    def select_language_tab(self, language="Python"):
+    def select_language_tab(self, code_container, language="Python"):
         """
         Select a specific language tab (e.g., Python, Java).
 
         :param language: The language tab to select.
         """
-        code_container = self.wait.until(
-            EC.presence_of_element_located(
-                (
-                    By.CSS_SELECTOR,
-                    "div.border-gray-3.dark\\:border-dark-gray-3.mb-6.overflow-hidden.rounded-lg.border.text-sm",
-                )
-            )
-        )
-
         language_tabs = code_container.find_elements(
             By.CSS_SELECTOR,
             "div.font-menlo.relative.flex.h-10.cursor-pointer.items-center.justify-center",
@@ -89,6 +80,9 @@ class LeetCodeScraper:
                 )
             )
         )
+
+        self.select_language_tab(code_container, language="Python")
+
         code_section = code_container.find_element(
             By.CSS_SELECTOR, "code.language-python"
         )
@@ -112,37 +106,52 @@ class LeetCodeScraper:
         """
         self.driver.quit()
 
+    def run_scrapper(self, url, link):
+        try:
+            # Open the problem page
+            scraper.open_page(url)
+
+            solution_links = scraper.get_solution_links()
+
+            print("Solution Links:", solution_links)
+
+            # Navigate to a specific solution (e.g., the third link)
+            scraper.navigate_to_solution(solution_links[link])
+
+            try:
+                # Extract the code using 'extract_code_type_bg3'
+                code = scraper.extract_code_type_bg3()
+            except Exception as e1:
+                print(f"Failed to extract using `extract_code_type_bg3`. Error: {e1}")
+                print("Attempting to extract using `extract_code_type_fontMenlo`...")
+
+                try:
+                    # Fallback to 'extract_code_type_fontMenlo'
+                    code = scraper.extract_code_type_fontMenlo()
+                except Exception as e2:
+                    print(
+                        f"Failed to extract using `extract_code_type_fontMenlo`. Error: {e2}"
+                    )
+                    print("No code extracted.")
+                    raise
+
+            code = scraper.extract_code_type_bg3()
+            print("Extracted Code:")
+            print(code)
+
+        finally:
+            scraper.close()
+
 
 if __name__ == "__main__":
     load_dotenv()
 
-    # Load environment variables
+    # Specify the path to your installed ChromeDriver
     chrome_driver_path = os.getenv("CHROME_DRIVER_PATH")
 
-    # Initialize the scraper
+    # Initialize the LeetCodeScraper
     scraper = LeetCodeScraper(driver_path=chrome_driver_path, wait_time=10)
 
-    try:
-        # Open the problem page
-        scraper.open_page("https://leetcode.com/problems/two-sum/solutions/")
-
-        # Get solution links
-        solution_links = scraper.get_solution_links()
-        print("Solution Links:", solution_links)
-
-        # Navigate to a specific solution (e.g., the third link)
-        scraper.navigate_to_solution(solution_links[8])
-
-        code = scraper.extract_code_type_fontMenlo()
-
-        # # Select the Python tab
-        # scraper.select_language_tab(language="Python")
-
-        # # Extract and print the code
-        # code = scraper.extract_code_type_bg3()
-        print("Extracted Code:")
-        print(code)
-
-    finally:
-        # Close the scraper
-        scraper.close()
+    url = "https://leetcode.com/problems/two-sum/solutions/"
+    link_index = 1
+    scraper.run_scrapper(url, link_index)
