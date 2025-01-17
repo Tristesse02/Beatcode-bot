@@ -1,5 +1,7 @@
 import os
+import json
 from dotenv import load_dotenv
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -107,6 +109,12 @@ class LeetCodeScraper:
         self.driver.quit()
 
     def run_scrapper(self, url, link):
+        """
+        Run the complete scraper process.
+
+        :param url: The URL of the problem's solution page.
+        :param link_index: The index of the solution link to scrape.
+        """
         try:
             # Open the problem page
             scraper.open_page(url)
@@ -142,6 +150,41 @@ class LeetCodeScraper:
         finally:
             scraper.close()
 
+        return code
+
+    def save_solution_to_file(self, filename, problem_name, language, code):
+        """
+        Save the problem name and solution to a JSON file.
+
+        :param filename: The JSON file to write to.
+        :param problem_name: Name of the problem.
+        :param language: Language of the solution.
+        :param code: The solution code.
+        """
+        try:
+            with open(filename, "r") as file:
+                data = json.load(file)
+                data.append({"language": language, "code": code})
+
+        except FileNotFoundError:  # Hardly speaking we will get this error
+            data = {}
+
+        if problem_name in data:
+            existing_solutions = data[problem_name]["solutions"]
+            for solution in existing_solutions:
+                if solution["language"] == language and solution["code"] == code:
+                    print("Solution already exists, skipping.")
+                    return
+            # Add the new solution to the problem's solutions list
+            data[problem_name]["solutions"].append({"language": language, "code": code})
+        else:
+            # Add a new problem with its solution
+            data[problem_name] = {"solutions": [{"language": language, "code": code}]}
+
+        with open(filename, "w") as file:
+            json.dump(data, file, indent=4)
+        print(f"Solution saved to {problem_name} in {language}.")
+
 
 if __name__ == "__main__":
     load_dotenv()
@@ -154,4 +197,5 @@ if __name__ == "__main__":
 
     url = "https://leetcode.com/problems/two-sum/solutions/"
     link_index = 1
-    scraper.run_scrapper(url, link_index)
+    code = scraper.run_scrapper(url, link_index)
+    scraper.save_solution_to_file("solutions.json", "Two Sum", "Python", code)

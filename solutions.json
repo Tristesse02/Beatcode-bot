@@ -1,0 +1,10 @@
+{
+    "Two Sum": {
+        "solutions": [
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        n = len(nums)\n        for i in range(n - 1):\n            for j in range(i + 1, n):\n                if nums[i] + nums[j] == target:\n                    return [i, j]\n        return []  # No solution found\n"
+            }
+        ]
+    }
+}
