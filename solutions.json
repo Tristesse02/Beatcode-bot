@@ -32,6 +32,10 @@
             {
                 "language": "Python",
                 "code": "class Solution:\n    def longestCommonPrefix(self, v: List[str]) -> str:\n        ans=\"\"\n        v=sorted(v)\n        first=v[0]\n        last=v[-1]\n        for i in range(min(len(first),len(last))):\n            if(first[i]!=last[i]):\n                return ans\n            ans+=first[i]\n        return ans \n"
+            },
+            {
+                "language": "Python",
+                "code": "class Solution:\n    def longestCommonPrefix(self, strs: List[str]) -> str:\n        if not strs:\n            return \"\"\n        new = \"\"\n        strs = sorted(strs)\n        first, last = strs[0], strs[-1]\n        for i in range(len(first)):\n            if i < len(last) and first[i] == last[i]:\n                new += first[i]\n            else:\n                break\n        return new"
             }
         ]
     },

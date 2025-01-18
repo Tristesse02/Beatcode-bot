@@ -173,12 +173,12 @@ class LeetCodeScraper:
             # Open the problem page
             scraper.open_page(f"{url}solutions/")
 
+            scraper.filter_by_language("Python")
             solution_links = scraper.get_solution_links()
 
             print("Solution Links:", solution_links)
 
             # Navigate to a specific solution (e.g., the third link)
-            scraper.filter_by_language("Python")
             scraper.navigate_to_solution(solution_links[link])
 
             try:
@@ -253,34 +253,34 @@ if __name__ == "__main__":
     # Initialize the LeetCodeScraper
     scraper = LeetCodeScraper(driver_path=chrome_driver_path, wait_time=10)
 
-    # url = "https://leetcode.com/problems/longest-common-prefix/"
-    # link_index = 2
-    # code = scraper.run_scrapper(url, link_index)
-    # scraper.save_solution_to_file(
-    #     "solutions.json", "Longest Common Prefix", "Python", code
-    # )
+    url = "https://leetcode.com/problems/longest-common-prefix/"
+    link_index = 2
+    code = scraper.run_scrapper(url, link_index)
+    scraper.save_solution_to_file(
+        "solutions.json", "Longest Common Prefix", "Python", code
+    )
 
-    # scraper.close()
+    scraper.close()
 
     # # Load the JSON file
-    try:
-        with open("combined.json", "r") as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        raise FileNotFoundError("File not found")
+    # try:
+    #     with open("combined.json", "r") as f:
+    #         data = json.load(f)
+    # except FileNotFoundError:
+    #     raise FileNotFoundError("File not found")
 
-    # print(len(data))
-    try:
-        for problem in data:
-            problem_name = problem["title"]
-            problem_url = problem["source"]
+    # # print(len(data))
+    # try:
+    #     for problem in data:
+    #         problem_name = problem["title"]
+    #         problem_url = problem["source"]
 
-            for idx in range(1, 3):
-                code = scraper.run_scrapper(problem_url, idx)
-                scraper.save_solution_to_file(
-                    "solutions.json", problem_name, "Python", code
-                )
-                time.sleep(4)
-    finally:
-        # Close the browser
-        scraper.close()
+    #         for idx in range(1, 3):
+    #             code = scraper.run_scrapper(problem_url, idx)
+    #             scraper.save_solution_to_file(
+    #                 "solutions.json", problem_name, "Python", code
+    #             )
+    #             time.sleep(4)
+    # finally:
+    #     # Close the browser
+    #     scraper.close()
