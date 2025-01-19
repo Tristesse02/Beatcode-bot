@@ -77,7 +77,9 @@ class BeatCodeAutomation:
         """Navigate to the custom page on the BeatCode website."""
         try:
             custom_button = self.wait.until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href='/solo/unranked']"))
+                EC.element_to_be_clickable(
+                    (By.CSS_SELECTOR, "a[href='/solo/unranked']")
+                )
             )
 
             custom_button.click()
@@ -387,6 +389,21 @@ class BeatCodeAutomation:
         except Exception as e:
             print(f"Failed to locate or click the submit button. Error: {e}")
 
+    def check_passing_problem(self):
+        try:
+            submit_button = self.wait.until(
+                EC.element_to_be_clickable(
+                    (
+                        By.CSS_SELECTOR,
+                        "button.ring-offset-background.focus-visible\\:ring-ring.inline-flex.justify-center.h-10",
+                    )
+                )
+            )
+            print("Problem passed.")
+            return True
+        except Exception as e:
+            return False
+
     def click_next_question(self):
         try:
             submit_button = self.wait.until(
@@ -454,22 +471,42 @@ if __name__ == "__main__":
             automation.check_if_on_game_room()
             time.sleep(2)
 
+            solution_index = 0  # Start with the first solution
+
             while not automation.check_winning_state():
                 try:
                     automation.read_and_highlight_problem()
 
-                    code = automation.fetch_problem_solution("solutions.json", 0)
+                    code = automation.fetch_problem_solution(
+                        "solutions.json", solution_index
+                    )
 
                     # automation.thinking(60) # TODO: comment out when deploying
 
-                    # TODO: If fail, we will have to fetch solution on the go!
                     automation.input_code_into_editor(code)
                     time.sleep(1)
                     automation.click_submit_program()
                     time.sleep(2)
-                    automation.click_next_question()
-                    time.sleep(15)
+
+                    if automation.check_passing_problem():
+                        print("Passed the problem")
+                        solution_index = 0  # Reset solution index for the next question
+                        automation.click_next_question()
+                        time.sleep(15)
+                    else:
+                        print(
+                            f"Failed to pass the problem with solution index {solution_index}"
+                        )
+                        solution_index += 1  # Move to the next solution
+
+                        # Check if we have exhausted all solutions
+                        if solution_index >= len(
+                            automation.fetch_all_solutions("solutions.json")
+                        ):
+                            print("No more solutions available. Stopping...")
+                            break
                 except Exception as e:
-                    break  # end of game
+                    print(f"Encountered an exception: {e}")
+                    break  # End of game
     finally:
         automation.teardown_driver()
