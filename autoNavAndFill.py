@@ -59,33 +59,81 @@ def naviate_to_lobby_page():
         print(f"Failed to navigate to custom page. Error: {e}")
 
 
-def click_join_room():
+# def click_join_room():
+#     """
+#     Check if the 'Join Room' button exists and click it.
+#     """
+#     try:
+#         # Locate the parent container of the room
+#         # Find the first instance
+#         room_container = wait.until(
+#             EC.presence_of_element_located(
+#                 (
+#                     By.CSS_SELECTOR,
+#                     "div.flex.items-center.justify-between.rounded-lg.border.border-secondary.p-4",
+#                 )
+#             )
+#         )
+#         print("Room container found.")
+
+#         # Locate the 'Join Room' button within the parent container
+#         join_button = room_container.find_element(
+#             By.CSS_SELECTOR,
+#             "a[href^='/room']",  # Find the <a> tag with href starting with '/room'
+#         )
+
+#         # Click the 'Join Room' button
+#         join_button.click()
+#         print("Clicked 'Join Room' button.")
+#     except Exception as e:
+#         print(f"Failed to locate or click the 'Join Room' button. Error: {e}")
+
+
+def click_join_room_Laufey():
     """
-    Check if the 'Join Room' button exists and click it.
+    Check if the 'Join Room' button exists for a room named 'Laufey' and click it.
+    This is for testing purpses only
     """
     try:
-        # Locate the parent container of the room
-        room_container = wait.until(
-            EC.presence_of_element_located(
+        # Locate all room containers
+        room_containers = wait.until(
+            EC.presence_of_all_elements_located(
                 (
                     By.CSS_SELECTOR,
                     "div.flex.items-center.justify-between.rounded-lg.border.border-secondary.p-4",
                 )
             )
         )
-        print("Room container found.")
+        print("Room containers found.")
 
-        # Locate the 'Join Room' button within the parent container
-        join_button = room_container.find_element(
-            By.CSS_SELECTOR,
-            "a[href^='/room']",  # Find the <a> tag with href starting with '/room'
-        )
+        # Iterate through each room container
+        for room_container in room_containers:
+            try:
+                # Locate the <h2> element within the room container
+                room_title = room_container.find_element(By.TAG_NAME, "h2")
 
-        # Click the 'Join Room' button
-        join_button.click()
-        print("Clicked 'Join Room' button.")
+                # Check if the room title is "Laufey"
+                if "Laufey" in room_title.text.strip():
+                    print("Room with title 'Laufey' found.")
+
+                    # Locate the 'Join Room' button within the container
+                    join_button = room_container.find_element(
+                        By.CSS_SELECTOR,
+                        "a[href^='/room']",  # Find the <a> tag with href starting with '/room'
+                    )
+
+                    # Click the 'Join Room' button
+                    join_button.click()
+                    print("Clicked 'Join Room' button.")
+                    return  # Exit after clicking the button
+
+            except Exception as e:
+                print(f"Error processing a room container: {e}")
+
+        print("No room with title 'Laufey' found.")
+
     except Exception as e:
-        print(f"Failed to locate or click the 'Join Room' button. Error: {e}")
+        print(f"Failed to locate room containers. Error: {e}")
 
 
 def click_next_button():
@@ -227,12 +275,97 @@ def input_code_into_editor(
         print(f"Failed to input code into the editor. Error: {e}")
 
 
+def read_and_highlight_problem():
+    """
+    Simulate reading the problem statement by highlighting content word by word.
+    """
+    try:
+        # Locate the questionare container
+        problem_container = wait.until(
+            EC.presence_of_element_located(
+                (
+                    By.CSS_SELECTOR,
+                    "div.h-full.overflow-y-auto.bg-background.px-4.py-5 > div:nth-child(3)",
+                )
+            )
+        )
+        print("Problem container located.")
+
+        # print(problem_container.get_attribute("innerHTML"))
+
+        # Find all direct children of the problem container
+        children = problem_container.find_elements(
+            By.XPATH, "./*"
+        )  # Direct children only
+
+        # Print details of each child
+        for i, child in enumerate(children):
+            print(f"Child {i + 1}:")
+            print(f"Tag Name: {child.tag_name}")
+            print(f"Inner HTML: {child.get_attribute('innerHTML')}")
+            print(f"Text Content: {child.text.strip()}")
+            print("-" * 50)
+
+            innerHTML = child.get_attribute("innerHTML").split()
+            for index, word in enumerate(innerHTML):
+                tmp = innerHTML.copy()
+                if "<" not in word and ">" not in word:
+                    print(f"Highlighting word: {word}")
+                    tmp[index] = nativeString(word)
+                    highlighted_html = " ".join(tmp)
+
+                    driver.execute_script(
+                        "arguments[0].innerHTML = arguments[1];",
+                        child,
+                        highlighted_html,
+                    )
+                else:
+                    # word is now containing HTML tags
+                    tmp[index] = nativeHTML(word)
+                    print(f"Highlighting word: {word}")
+
+                    highlighted_html = " ".join(tmp)
+                    driver.execute_script(
+                        "arguments[0].innerHTML = arguments[1];",
+                        child,
+                        highlighted_html,
+                    )
+
+                time.sleep(0.2)  # Sleep for 0.5s
+
+                if index == len(innerHTML) - 1:
+                    highlighted_html = " ".join(innerHTML)
+                    driver.execute_script(
+                        "arguments[0].innerHTML = arguments[1];",
+                        child,
+                        highlighted_html,
+                    )
+
+        direct_text = problem_container.text.strip()
+        if direct_text:
+            print("Direct text inside the container:")
+            print(direct_text)
+
+        print("Finished reading the problem statement.")
+    except Exception as e:
+        print(f"Failed to read and highlight the problem statement. Error: {e}")
+
+
+def nativeHTML(word):
+    idx = word.find(">")
+    return word[:idx] + f" style='background-color: #1e8758;' + {word[idx:]}"
+
+
+def nativeString(word):
+    return f"<span style='background-color: #1e8758;'>{word}</span>"
+
+
 chrome_driver_path = os.getenv("CHROME_DRIVER_PATH")
 
 driver = webdriver.Chrome(service=Service(chrome_driver_path))
 wait = WebDriverWait(driver, 10)
 
-code = """class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1
+code = """class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1
 """
 
 driver.get("https://www.beatcode.dev/home")
@@ -248,13 +381,17 @@ elif current_url == "https://www.beatcode.dev/login":
     time.sleep(1)
     naviate_to_lobby_page()
     time.sleep(1)
-    click_join_room()
+    click_join_room_Laufey()
     time.sleep(1)
     click_next_button()
     time.sleep(5)
     check_if_on_game_room()
 
     # Successfully got to the game room
+    # TODO: Add reading time for the problem statement
+
+    read_and_highlight_problem()
+
     input_code_into_editor(code)
     time.sleep(15)
 
