@@ -235,7 +235,7 @@ class BeatCodeAutomation:
         code,
         short_line_threshold=30,
         typing_speed_short=0.05,
-        typing_speed_long=0.5,
+        typing_speed_long=0.3,
         typo_chance=0.15,
     ):
         """
@@ -281,13 +281,15 @@ class BeatCodeAutomation:
                     editor_container.send_keys(char)
                     time.sleep(random.uniform(typing_speed_short, typing_speed_long))
 
+                editor_container.send_keys(Keys.SPACE)
+
                 editor_container.send_keys(Keys.RETURN)
 
             print("Code successfully input into the editor.")
         except Exception as e:
             print(f"Failed to input code into the editor. Error: {e}")
 
-    def read_and_highlight_problem(self):
+    def read_and_highlight_problem(self, read_speed=0.1):
         """Read the problem statement and highlight the keywords."""
         try:
             problem_container = self.wait.until(
@@ -323,7 +325,7 @@ class BeatCodeAutomation:
                         child,
                         highlighted_html,
                     )
-                    time.sleep(0.2)
+                    time.sleep(read_speed)
 
                 highlighted_html = " ".join(innerHTML)
                 self.driver.execute_script(
@@ -350,6 +352,40 @@ class BeatCodeAutomation:
         """Highlight the word in the string format"""
         return f"<span style='background-color: #1e8758;'>{word}</span>"
 
+    def click_submit_program(self):
+        """
+        Click the submit button to complete the program submission.
+        """
+        try:
+            # Locate the button using a combination of class names
+            submit_button = self.wait.until(
+                EC.element_to_be_clickable(
+                    (
+                        By.CSS_SELECTOR,
+                        "button.ring-offset-background.focus-visible\\:ring-ring.inline-flex.justify-center.gap-2",
+                    )
+                )
+            )
+            # Click the button
+            submit_button.click()
+            print("Clicked the submit button.")
+        except Exception as e:
+            print(f"Failed to locate or click the submit button. Error: {e}")
+
+    def click_next_question(self):
+        try:
+            submit_button = self.wait.until(
+                EC.element_to_be_clickable(
+                    (
+                        By.CSS_SELECTOR,
+                        "button.ring-offset-background.focus-visible\\:ring-ring.inline-flex.justify-center.h-10",
+                    )
+                )
+            )
+            submit_button.click()
+        except Exception as e:
+            print(f"Failed to locate or click the next question button. Error: {e}")
+
 
 # Example usage:
 if __name__ == "__main__":
@@ -372,6 +408,7 @@ if __name__ == "__main__":
             automation.click_next_button()
             time.sleep(5)
             automation.check_if_on_game_room()
+            time.sleep(2)
 
             automation.read_and_highlight_problem()
 
@@ -379,6 +416,10 @@ if __name__ == "__main__":
 
             # TODO: If fail, we will have to fetch solution on the go!
             automation.input_code_into_editor(code)
+            time.sleep(1)
+            automation.click_submit_program()
+            time.sleep(2)
+            automation.click_next_question()
             time.sleep(15)
     finally:
         automation.teardown_driver()
