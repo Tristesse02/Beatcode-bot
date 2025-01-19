@@ -1,5 +1,7 @@
 import os
+import re
 import time
+import json
 import random
 from dotenv import load_dotenv
 
@@ -13,387 +15,370 @@ from selenium.webdriver.support import expected_conditions as EC
 load_dotenv()
 
 
-def handle_login(username, password):
-    try:
-        username_field = wait.until(
-            EC.presence_of_element_located((By.NAME, "username"))
-        )
-        password_field = wait.until(
-            EC.presence_of_element_located((By.NAME, "password"))
-        )
-        username_field.send_keys(username)
-        password_field.send_keys(password)
+class BeatCodeAutomation:
+    def __init__(self):
+        self.driver = None
+        self.wait = None
 
-        submit_button = wait.until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))
-        )
+    def setup_driver(self):
+        """
+        Set up the Selenium WebDriver with the specified ChromeDriver path.
+        """
+        chrome_driver_path = os.getenv("CHROME_DRIVER_PATH")
+        self.driver = webdriver.Chrome(service=Service(chrome_driver_path))
+        self.wait = WebDriverWait(self.driver, 10)
 
-        submit_button.click()
+    def teardown_driver(self):
+        """
+        Quit the Selenium WebDriver.
+        """
+        if self.driver:
+            self.driver.quit()
 
-        print("Login proceess initiated")
-    except Exception as e:
-        print(f"Failed to log in. Error: {e}")
+    def handle_login(self, username, password):
+        """Log in to the BeatCode website.
 
-
-def naviate_to_custom_page():
-    try:
-        custom_button = wait.until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href='/custom']"))
-        )
-
-        custom_button.click()
-        print("Navigating to custom page")
-    except Exception as e:
-        print(f"Failed to navigate to custom page. Error: {e}")
-
-
-def naviate_to_lobby_page():
-    try:
-        custom_button = wait.until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href='/custom/lobby']"))
-        )
-
-        custom_button.click()
-        print("Navigating to lobby page")
-    except Exception as e:
-        print(f"Failed to navigate to custom page. Error: {e}")
-
-
-# def click_join_room():
-#     """
-#     Check if the 'Join Room' button exists and click it.
-#     """
-#     try:
-#         # Locate the parent container of the room
-#         # Find the first instance
-#         room_container = wait.until(
-#             EC.presence_of_element_located(
-#                 (
-#                     By.CSS_SELECTOR,
-#                     "div.flex.items-center.justify-between.rounded-lg.border.border-secondary.p-4",
-#                 )
-#             )
-#         )
-#         print("Room container found.")
-
-#         # Locate the 'Join Room' button within the parent container
-#         join_button = room_container.find_element(
-#             By.CSS_SELECTOR,
-#             "a[href^='/room']",  # Find the <a> tag with href starting with '/room'
-#         )
-
-#         # Click the 'Join Room' button
-#         join_button.click()
-#         print("Clicked 'Join Room' button.")
-#     except Exception as e:
-#         print(f"Failed to locate or click the 'Join Room' button. Error: {e}")
-
-
-def click_join_room_Laufey():
-    """
-    Check if the 'Join Room' button exists for a room named 'Laufey' and click it.
-    This is for testing purpses only
-    """
-    try:
-        # Locate all room containers
-        room_containers = wait.until(
-            EC.presence_of_all_elements_located(
-                (
-                    By.CSS_SELECTOR,
-                    "div.flex.items-center.justify-between.rounded-lg.border.border-secondary.p-4",
-                )
+        Args:
+            username str: just a valid email
+            password str: and a valid password
+        """
+        try:
+            username_field = self.wait.until(
+                EC.presence_of_element_located((By.NAME, "username"))
             )
-        )
-        print("Room containers found.")
+            password_field = self.wait.until(
+                EC.presence_of_element_located((By.NAME, "password"))
+            )
+            username_field.send_keys(username)
+            password_field.send_keys(password)
 
-        # Iterate through each room container
-        for room_container in room_containers:
-            try:
-                # Locate the <h2> element within the room container
-                room_title = room_container.find_element(By.TAG_NAME, "h2")
+            submit_button = self.wait.until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))
+            )
 
-                # Check if the room title is "Laufey"
-                if "Laufey" in room_title.text.strip():
-                    print("Room with title 'Laufey' found.")
+            submit_button.click()
 
-                    # Locate the 'Join Room' button within the container
-                    join_button = room_container.find_element(
+            print("Login process initiated")
+        except Exception as e:
+            print(f"Failed to log in. Error: {e}")
+
+    def navigate_to_custom_page(self):
+        """Navigate to the custom page on the BeatCode website."""
+        try:
+            custom_button = self.wait.until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href='/custom']"))
+            )
+
+            custom_button.click()
+            print("Navigating to custom page")
+        except Exception as e:
+            print(f"Failed to navigate to custom page. Error: {e}")
+
+    def navigate_to_lobby_page(self):
+        try:
+            lobby_button = self.wait.until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href='/custom/lobby']"))
+            )
+
+            lobby_button.click()
+            print("Navigating to lobby page")
+        except Exception as e:
+            print(f"Failed to navigate to lobby page. Error: {e}")
+
+    def click_join_room(self):
+        """
+        Check for the first room available and click on join room
+        # TODO: Add robustness in checking for room availability
+        """
+        try:
+            room_container = self.wait.until(
+                EC.presence_of_element_located(
+                    (
                         By.CSS_SELECTOR,
-                        "a[href^='/room']",  # Find the <a> tag with href starting with '/room'
+                        "div.flex.items-center.justify-between.rounded-lg.border.border-secondary.p-4",
                     )
-
-                    # Click the 'Join Room' button
-                    join_button.click()
-                    print("Clicked 'Join Room' button.")
-                    return  # Exit after clicking the button
-
-            except Exception as e:
-                print(f"Error processing a room container: {e}")
-
-        print("No room with title 'Laufey' found.")
-
-    except Exception as e:
-        print(f"Failed to locate room containers. Error: {e}")
-
-
-def click_next_button():
-    """
-    Click the button after joining the room.
-    """
-    try:
-        # Locate the button by its unique attributes
-        next_button = wait.until(
-            EC.element_to_be_clickable(
-                (
-                    By.CSS_SELECTOR,
-                    "button.ring-offset-background.focus-visible\\:ring-ring.inline-flex.items-center.justify-center.gap-2.whitespace-nowrap.rounded-md.px-8.mt-4.text-lg",  # Locate the button by its type
                 )
             )
-        )
+            print("Room container found.")
 
-        # Click the button
-        next_button.click()
-        print("Clicked the next button.")
-    except Exception as e:
-        print(f"Failed to locate or click the button. Error: {e}")
-
-
-def switch_to_new_window():
-    """
-    Switch to the newly opened window.
-    """
-    try:
-        original_window = driver.current_window_handle  # Store the original window
-        print(f"Original window: {original_window}")
-
-        # Wait for the new window to open
-        # WebDriverWait(driver, 10).until(EC.new_window_is_opened(driver.window_handles))
-
-        # Wait for the number of window handles to increase
-        # TODO: Need a more robust handle for this
-        WebDriverWait(driver, 10).until(lambda d: len(d.window_handles) > 1)
-
-        # Get all window handles
-        all_windows = driver.window_handles
-        print(f"All windows: {all_windows}")
-
-        # Switch to the new window
-        for window in all_windows:
-            if window != original_window:
-                driver.switch_to.window(window)
-                print(f"Switched to new window: {window}")
-                break
-    except Exception as e:
-        print(f"Failed to switch to the new window. Error: {e}")
-
-
-def check_if_on_game_room():
-    """
-    Wait for the new game room window and switch to it.
-    """
-    try:
-        switch_to_new_window()  # Switch to the new game room window
-        print("minhdz", driver.current_url)
-        # Ensure we are on the game room URL
-        attempts = 0
-        while (
-            "https://www.beatcode.dev/game" not in driver.current_url and attempts < 5
-        ):
-            time.sleep(5)
-            print("Waiting for game room to load...")
-            attempts += 1
-
-        if "https://www.beatcode.dev/game" in driver.current_url:
-            print("Successfully navigated to the game room.")
-        else:
-            print("Game room did not load in time.")
-    except Exception as e:
-        print(f"Error while checking for game room. Error: {e}")
-
-
-def input_code_into_editor(
-    code,
-    short_line_threshold=30,
-    typing_speed_short=0.05,
-    typing_speed_long=0.5,
-    typo_chance=0.15,
-):
-    """
-    Input code into the editor with realistic typing speed based on line length.
-
-    :param code: The code to be typed.
-    :param short_line_threshold: The maximum length for a line to be considered "short".
-    :param typing_speed_short: Typing speed (in seconds) for short lines.
-    :param typing_speed_long: Typing speed (in seconds) for long lines.
-    :param typo_chance: Probability of making a typo.
-    """
-    try:
-        editor_container = wait.until(
-            EC.presence_of_element_located(
-                (
-                    By.CSS_SELECTOR,
-                    "div[role='textbox']",
-                )  # Based on the 'role' attribute
+            join_button = room_container.find_element(
+                By.CSS_SELECTOR,
+                "a[href^='/room']",  # Find the <a> tag with href starting with '/room'
             )
-        )
-        print("Editor container located.")
 
-        # To focus on the code editor
-        editor_container.click()
-        time.sleep(1)  # Allow the editor to focus a bit
+            join_button.click()
+            print("Clicked 'Join Room' button.")
+        except Exception as e:
+            print(f"Failed to locate or click the 'Join Room' button. Error: {e}")
 
-        # Clear existing content in the editor
-        editor_container.send_keys(Keys.CONTROL + "a")
-        editor_container.send_keys(Keys.DELETE)
+    def click_join_room_laufey(self):
+        """Check if the room with title 'Laufey' exists and click the 'Join Room' button.
+        TODO: Just for testing purpose
+        """
+        try:
+            room_containers = self.wait.until(
+                EC.presence_of_all_elements_located(
+                    (
+                        By.CSS_SELECTOR,
+                        "div.flex.items-center.justify-between.rounded-lg.border.border-secondary.p-4",
+                    )
+                )
+            )
+            print("Room containers found.")
 
-        # Type line by line
-        lines = code.split("\n")
-        for line in lines:
-            # Determine typing speed based on line length
-            if len(line.strip()) <= short_line_threshold:
-                typing_speed = typing_speed_short
+            for room_container in room_containers:
+                try:
+                    room_title = room_container.find_element(By.TAG_NAME, "h2")
+                    if "Laufey" in room_title.text.strip():
+                        print("Room with title 'Laufey' found.")
+                        join_button = room_container.find_element(
+                            By.CSS_SELECTOR, "a[href^='/room']"
+                        )
+                        join_button.click()
+                        print("Clicked 'Join Room' button.")
+                        return
+                except Exception as e:
+                    print(f"Error processing a room container: {e}")
+
+            print("No room with title 'Laufey' found.")
+
+        except Exception as e:
+            print(f"Failed to locate room containers. Error: {e}")
+
+    def click_next_button(self):
+        """Click the 'Next' button to proceed to the game room."""
+        try:
+            next_button = self.wait.until(
+                EC.element_to_be_clickable(
+                    (
+                        By.CSS_SELECTOR,
+                        "button.ring-offset-background.focus-visible\\:ring-ring.inline-flex.items-center.justify-center.gap-2.whitespace-nowrap.rounded-md.px-8.mt-4.text-lg",
+                    )
+                )
+            )
+            next_button.click()
+            print("Clicked the next button.")
+        except Exception as e:
+            print(f"Failed to locate or click the button. Error: {e}")
+
+    def switch_to_new_window(self):
+        """Switch to the new game window that opens after clicking the 'Next' button."""
+        try:
+            original_window = self.driver.current_window_handle
+            print(f"Original window: {original_window}")
+
+            WebDriverWait(self.driver, 10).until(lambda d: len(d.window_handles) > 1)
+
+            for window in self.driver.window_handles:
+                if window != original_window:
+                    self.driver.switch_to.window(window)
+                    print(f"Switched to new window: {window}")
+                    break
+        except Exception as e:
+            print(f"Failed to switch to the new window. Error: {e}")
+
+    def check_if_on_game_room(self):
+        """Check if the current URL is the game room URL."""
+        try:
+            self.switch_to_new_window()
+            attempts = 0
+            while (
+                "https://www.beatcode.dev/game" not in self.driver.current_url
+                and attempts < 5
+            ):
+                time.sleep(5)
+                print("Waiting for game room to load...")
+                attempts += 1
+
+            if "https://www.beatcode.dev/game" in self.driver.current_url:
+                print("Successfully navigated to the game room.")
             else:
-                typing_speed = typing_speed_long
+                print("Game room did not load in time.")
+        except Exception as e:
+            print(f"Error while checking for game room. Error: {e}")
 
-            # Type each character in the line
-            for char in line:
-                if random.random() < typo_chance:  # Introduce a random typo
-                    typo_char = random.choice("abcdefghijklmnopqrstuvwxyz")
-                    editor_container.send_keys(typo_char)
-                    time.sleep(typing_speed)
-                    editor_container.send_keys(Keys.BACKSPACE)  # Correct the typo
-                    time.sleep(typing_speed)
+    def fetch_problem_solution(self, filename="solutions.json", useSolutionIdx=0):
+        """Fetch the solution code for the current problem statement.
 
-                editor_container.send_keys(char)
-                time.sleep(random.uniform(typing_speed_short, typing_speed_long))
+        Args:
+            filename (str, optional): json file containing answer key. Defaults to "solutions.json".
+            useSolutionIdx (int, optional): index to get the solution. Defaults to 0.
 
-            # Simulate pressing "Enter" at the end of the line
-            editor_container.send_keys(Keys.RETURN)
+        Returns:
+            _type_: the code to the problem statement
 
-        print("Code successfully input into the editor with line-based typing speed.")
-    except Exception as e:
-        print(f"Failed to input code into the editor. Error: {e}")
-
-
-def read_and_highlight_problem():
-    """
-    Simulate reading the problem statement by highlighting content word by word.
-    """
-    try:
-        # Locate the questionare container
-        problem_container = wait.until(
-            EC.presence_of_element_located(
-                (
-                    By.CSS_SELECTOR,
-                    "div.h-full.overflow-y-auto.bg-background.px-4.py-5 > div:nth-child(3)",
+        TODO: Add the ability to fetch the solution on the go
+        TODO: Add robustness for useSolutionIdx (various index should be accepted)
+        """
+        solutions = {}
+        try:
+            problem_statement = self.wait.until(
+                EC.presence_of_element_located(
+                    (By.CSS_SELECTOR, "h2.mb-2.text-2xl.font-semibold")
                 )
             )
-        )
-        print("Problem container located.")
 
-        # print(problem_container.get_attribute("innerHTML"))
+            problem_statement_text = problem_statement.text
+            print(f"Problem statement: {problem_statement_text}")
 
-        # Find all direct children of the problem container
-        children = problem_container.find_elements(
-            By.XPATH, "./*"
-        )  # Direct children only
+            with open(filename, "r") as file:
+                solutions = json.load(file)
+            return solutions[problem_statement_text]["solutions"][useSolutionIdx][
+                "code"
+            ]
 
-        # Print details of each child
-        for i, child in enumerate(children):
-            print(f"Child {i + 1}:")
-            print(f"Tag Name: {child.tag_name}")
-            print(f"Inner HTML: {child.get_attribute('innerHTML')}")
-            print(f"Text Content: {child.text.strip()}")
-            print("-" * 50)
+        except Exception as e:
+            print(f"Failed to fetch the problem statement. Error: {e}")
 
-            innerHTML = child.get_attribute("innerHTML").split()
-            for index, word in enumerate(innerHTML):
-                tmp = innerHTML.copy()
-                if "<" not in word and ">" not in word:
-                    print(f"Highlighting word: {word}")
-                    tmp[index] = nativeString(word)
+    def input_code_into_editor(
+        self,
+        code,
+        short_line_threshold=30,
+        typing_speed_short=0.05,
+        typing_speed_long=0.5,
+        typo_chance=0.15,
+    ):
+        """
+        Input the code into the editor on the game room page
+
+        Args:
+            code (str): the solution code that will be inputted into the editor
+            short_line_threshold (int, optional): Define what to be short and what to be long line. Defaults to 30.
+            typing_speed_short (float, optional): typing speed for short line. Defaults to 0.05.
+            typing_speed_long (float, optional): typing speed for long line. Defaults to 0.5.
+            typo_chance (float, optional): Chance to get a typo. Defaults to 0.15.
+        """
+        try:
+            editor_container = self.wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='textbox']"))
+            )
+            print("Editor container located.")
+
+            editor_container.click()
+            time.sleep(1)
+
+            editor_container.send_keys(Keys.CONTROL + "a")
+            editor_container.send_keys(Keys.DELETE)
+
+            lines = code.split("\n")
+            for line in lines:
+                typing_speed = (
+                    typing_speed_short
+                    if len(line.strip()) <= short_line_threshold
+                    else typing_speed_long
+                )
+
+                editor_container.send_keys(Keys.CONTROL + Keys.BACKSPACE)
+
+                for char in line:
+                    if random.random() < typo_chance:
+                        typo_char = random.choice("abcdefghijklmnopqrstuvwxyz")
+                        editor_container.send_keys(typo_char)
+                        time.sleep(typing_speed)
+                        editor_container.send_keys(Keys.BACKSPACE)
+                        time.sleep(typing_speed)
+
+                    editor_container.send_keys(char)
+                    time.sleep(random.uniform(typing_speed_short, typing_speed_long))
+
+                editor_container.send_keys(Keys.RETURN)
+
+            print("Code successfully input into the editor.")
+        except Exception as e:
+            print(f"Failed to input code into the editor. Error: {e}")
+
+    def read_and_highlight_problem(self):
+        """Read the problem statement and highlight the keywords."""
+        try:
+            problem_container = self.wait.until(
+                EC.presence_of_element_located(
+                    (
+                        By.CSS_SELECTOR,
+                        "div.h-full.overflow-y-auto.bg-background.px-4.py-5 > div:nth-child(3)",
+                    )
+                )
+            )
+            print("Problem container located.")
+
+            children = problem_container.find_elements(By.XPATH, "./*")
+
+            for i, child in enumerate(children):
+                print(f"Child {i + 1}:")
+                print(f"Tag Name: {child.tag_name}")
+                print(f"Inner HTML: {child.get_attribute('innerHTML')}")
+                print(f"Text Content: {child.text.strip()}")
+                print("-" * 50)
+
+                innerHTML = child.get_attribute("innerHTML").split()
+                for index, word in enumerate(innerHTML):
+                    tmp = innerHTML.copy()
+                    if "<" not in word and ">" not in word:
+                        tmp[index] = self.native_string(word)
+                    else:
+                        tmp[index] = self.native_html(word)
+
                     highlighted_html = " ".join(tmp)
-
-                    driver.execute_script(
+                    self.driver.execute_script(
                         "arguments[0].innerHTML = arguments[1];",
                         child,
                         highlighted_html,
                     )
-                else:
-                    # word is now containing HTML tags
-                    tmp[index] = nativeHTML(word)
-                    print(f"Highlighting word: {word}")
+                    time.sleep(0.2)
 
-                    highlighted_html = " ".join(tmp)
-                    driver.execute_script(
-                        "arguments[0].innerHTML = arguments[1];",
-                        child,
-                        highlighted_html,
-                    )
+                highlighted_html = " ".join(innerHTML)
+                self.driver.execute_script(
+                    "arguments[0].innerHTML = arguments[1];", child, highlighted_html
+                )
 
-                time.sleep(0.2)  # Sleep for 0.5s
+            print("Finished reading the problem statement.")
+        except Exception as e:
+            print(f"Failed to read and highlight the problem statement. Error: {e}")
 
-                if index == len(innerHTML) - 1:
-                    highlighted_html = " ".join(innerHTML)
-                    driver.execute_script(
-                        "arguments[0].innerHTML = arguments[1];",
-                        child,
-                        highlighted_html,
-                    )
+    def native_html(self, word):
+        """Highlight the word in the HTML format
 
-        direct_text = problem_container.text.strip()
-        if direct_text:
-            print("Direct text inside the container:")
-            print(direct_text)
+        Args:
+            word (str): the word that contains HTML tags
 
-        print("Finished reading the problem statement.")
-    except Exception as e:
-        print(f"Failed to read and highlight the problem statement. Error: {e}")
+        Returns:
+            _type_: the highlighted word in HTML format
+        """
+        idx = word.find(">")
+        return word[:idx] + f" style='background-color: #1e8758;' " + word[idx:]
+
+    def native_string(self, word):
+        """Highlight the word in the string format"""
+        return f"<span style='background-color: #1e8758;'>{word}</span>"
 
 
-def nativeHTML(word):
-    idx = word.find(">")
-    return word[:idx] + f" style='background-color: #1e8758;' + {word[idx:]}"
+# Example usage:
+if __name__ == "__main__":
+    automation = BeatCodeAutomation()
+    automation.setup_driver()
 
+    try:
+        automation.driver.get("https://www.beatcode.dev/home")
+        if automation.driver.current_url == "https://www.beatcode.dev/home":
+            print("You are on the home page")
+        elif automation.driver.current_url == "https://www.beatcode.dev/login":
+            automation.handle_login("kobop54654@halbov.com", "123456789")
+            time.sleep(2)
+            automation.navigate_to_custom_page()
+            time.sleep(1)
+            automation.navigate_to_lobby_page()
+            time.sleep(1)
+            automation.click_join_room_laufey()
+            time.sleep(1)
+            automation.click_next_button()
+            time.sleep(5)
+            automation.check_if_on_game_room()
 
-def nativeString(word):
-    return f"<span style='background-color: #1e8758;'>{word}</span>"
+            automation.read_and_highlight_problem()
 
+            code = automation.fetch_problem_solution("solutions.json", 0)
 
-chrome_driver_path = os.getenv("CHROME_DRIVER_PATH")
-
-driver = webdriver.Chrome(service=Service(chrome_driver_path))
-wait = WebDriverWait(driver, 10)
-
-code = """class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1class Solution:\ndef repeatedSubstringPattern(self, s: str) -> bool:\nreturn (s + s)[1:-1].find(s) != -1
-"""
-
-driver.get("https://www.beatcode.dev/home")
-
-current_url = driver.current_url
-
-if current_url == "https://www.beatcode.dev/home":
-    print("You are on the home page")
-elif current_url == "https://www.beatcode.dev/login":
-    handle_login("kobop54654@halbov.com", "123456789")
-    time.sleep(2)
-    naviate_to_custom_page()
-    time.sleep(1)
-    naviate_to_lobby_page()
-    time.sleep(1)
-    click_join_room_Laufey()
-    time.sleep(1)
-    click_next_button()
-    time.sleep(5)
-    check_if_on_game_room()
-
-    # Successfully got to the game room
-    # TODO: Add reading time for the problem statement
-
-    read_and_highlight_problem()
-
-    input_code_into_editor(code)
-    time.sleep(15)
-
-
-driver.quit()
+            # TODO: If fail, we will have to fetch solution on the go!
+            automation.input_code_into_editor(code)
+            time.sleep(15)
+    finally:
+        automation.teardown_driver()
