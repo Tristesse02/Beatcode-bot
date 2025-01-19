@@ -1,5 +1,4 @@
 import os
-import re
 import time
 import json
 import random
@@ -73,6 +72,19 @@ class BeatCodeAutomation:
             print("Navigating to custom page")
         except Exception as e:
             print(f"Failed to navigate to custom page. Error: {e}")
+
+    def navigate_to_unrank_page(self):
+        """Navigate to the custom page on the BeatCode website."""
+        try:
+            custom_button = self.wait.until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href='/solo/unranked']"))
+            )
+
+            custom_button.click()
+            time.sleep(1)
+            print("Navigating to custom page")
+        except Exception as e:
+            print(f"Failed to navigate to unrank page. Error: {e}")
 
     def navigate_to_lobby_page(self):
         try:
@@ -230,6 +242,9 @@ class BeatCodeAutomation:
         except Exception as e:
             print(f"Failed to fetch the problem statement. Error: {e}")
 
+    def thinking(self, time):
+        time.sleep(time)
+
     def input_code_into_editor(
         self,
         code,
@@ -386,9 +401,38 @@ class BeatCodeAutomation:
         except Exception as e:
             print(f"Failed to locate or click the next question button. Error: {e}")
 
+    def check_winning_state(self):
+        try:
+            winning_state = self.wait.until(
+                EC.presence_of_element_located(
+                    (By.CSS_SELECTOR, "div.mb-10.font-icon.text-5xl.font-bold")
+                )
+            )
+            print("Winning state found.")
+            if "You won!" in winning_state.text:
+                print("You won!")
+                return True
+            print(winning_state.text)
+            return False
+        except Exception as e:
+            print(f"Failed to locate winning state. Error: {e}")
+        return False
+
+    def navigate_to_custom(self):
+        self.navigate_to_custom_page()
+        time.sleep(1)
+        self.navigate_to_lobby_page()
+        time.sleep(1)
+        self.click_join_room_laufey()
+        time.sleep(1)
+        self.click_next_button()
+        time.sleep(5)
+
 
 # Example usage:
 if __name__ == "__main__":
+    load_dotenv()
+
     automation = BeatCodeAutomation()
     automation.setup_driver()
 
@@ -397,29 +441,35 @@ if __name__ == "__main__":
         if automation.driver.current_url == "https://www.beatcode.dev/home":
             print("You are on the home page")
         elif automation.driver.current_url == "https://www.beatcode.dev/login":
-            automation.handle_login("kobop54654@halbov.com", "123456789")
+            automation.handle_login(
+                os.getenv("USERNAME_BEATCODE"), os.getenv("PASSWORD_BEATCODE")
+            )
             time.sleep(2)
-            automation.navigate_to_custom_page()
-            time.sleep(1)
-            automation.navigate_to_lobby_page()
-            time.sleep(1)
-            automation.click_join_room_laufey()
-            time.sleep(1)
-            automation.click_next_button()
-            time.sleep(5)
+            # Comment out to navigate to custom page
+            # automation.navigate_to_custom()
+
+            # Comment out to navigate to unrank page
+            automation.navigate_to_unrank_page()
+
             automation.check_if_on_game_room()
             time.sleep(2)
 
-            automation.read_and_highlight_problem()
+            while not automation.check_winning_state():
+                try:
+                    automation.read_and_highlight_problem()
 
-            code = automation.fetch_problem_solution("solutions.json", 0)
+                    code = automation.fetch_problem_solution("solutions.json", 0)
 
-            # TODO: If fail, we will have to fetch solution on the go!
-            automation.input_code_into_editor(code)
-            time.sleep(1)
-            automation.click_submit_program()
-            time.sleep(2)
-            automation.click_next_question()
-            time.sleep(15)
+                    # automation.thinking(60) # TODO: comment out when deploying
+
+                    # TODO: If fail, we will have to fetch solution on the go!
+                    automation.input_code_into_editor(code)
+                    time.sleep(1)
+                    automation.click_submit_program()
+                    time.sleep(2)
+                    automation.click_next_question()
+                    time.sleep(15)
+                except Exception as e:
+                    break  # end of game
     finally:
         automation.teardown_driver()
