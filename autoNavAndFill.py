@@ -594,6 +594,9 @@ if __name__ == "__main__":
                     code = automation.fetch_problem_solution(
                         "solutions.json", solution_index
                     )
+
+                    automation.read_and_highlight_problem()
+                    time.sleep(2)
                     processedCode = automation.process_raw_solution(code)
 
                     # Input the solution into the editor
