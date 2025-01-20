@@ -2,6 +2,7 @@ import os
 import time
 import json
 import random
+import pyperclip
 from dotenv import load_dotenv
 
 from selenium import webdriver
@@ -244,22 +245,49 @@ class BeatCodeAutomation:
         except Exception as e:
             print(f"Failed to fetch the problem statement. Error: {e}")
 
+    def process_raw_solution(self, raw_solution):
+        """Process the raw solution code into a list of lines.
+
+        Args:
+            raw_solution (string): the raw solution code
+
+        Returns:
+            list: the list of lines of the solution code
+        """
+        processed = raw_solution.split("\n")
+
+        return [s for s in processed if s != "" and not s.isspace()]
+
     def thinking(self, time):
         time.sleep(time)
+
+    # def fix_code_deletio(self, code_solution):
+    #     editor_container = self.wait.until(
+    #         EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='textbox']"))
+    #     )
+    #     editor_container.click()
+    #     time.sleep(1)
+
+    #     editor_container.send_keys(Keys.PAGE_UP)
+    #     time.sleep(0.5)
+
+    #     solution_index = 0
+
+    #     while solution_index < len(code):
 
     def input_code_into_editor(
         self,
         code,
         short_line_threshold=30,
         typing_speed_short=0.05,
-        typing_speed_long=0.3,
+        typing_speed_long=0.05,
         typo_chance=0.15,
     ):
         """
         Input the code into the editor on the game room page
 
         Args:
-            code (str): the solution code that will be inputted into the editor
+            code (list): the solution code that will be inputted into the editor
             short_line_threshold (int, optional): Define what to be short and what to be long line. Defaults to 30.
             typing_speed_short (float, optional): typing speed for short line. Defaults to 0.05.
             typing_speed_long (float, optional): typing speed for long line. Defaults to 0.5.
@@ -277,8 +305,8 @@ class BeatCodeAutomation:
             editor_container.send_keys(Keys.CONTROL + "a")
             editor_container.send_keys(Keys.DELETE)
 
-            lines = code.split("\n")
-            for line in lines:
+            print("here here here!", code)
+            for line in code:
                 typing_speed = (
                     typing_speed_short
                     if len(line.strip()) <= short_line_threshold
@@ -287,24 +315,45 @@ class BeatCodeAutomation:
 
                 editor_container.send_keys(Keys.CONTROL + Keys.BACKSPACE)
 
-                for char in line:
-                    if random.random() < typo_chance:
-                        typo_char = random.choice("abcdefghijklmnopqrstuvwxyz")
-                        editor_container.send_keys(typo_char)
-                        time.sleep(typing_speed)
-                        editor_container.send_keys(Keys.BACKSPACE)
-                        time.sleep(typing_speed)
-
-                    editor_container.send_keys(char)
-                    time.sleep(random.uniform(typing_speed_short, typing_speed_long))
-
-                editor_container.send_keys(Keys.SPACE)
+                self.typing_code_into_editor(
+                    line,
+                    typo_chance,
+                    editor_container,
+                    typing_speed_short,
+                    typing_speed_long,
+                    typing_speed,
+                )
 
                 editor_container.send_keys(Keys.RETURN)
 
             print("Code successfully input into the editor.")
         except Exception as e:
             print(f"Failed to input code into the editor. Error: {e}")
+
+    def typing_code_into_editor(
+        self,
+        line,
+        typo_chance,
+        editor_container,
+        typing_speed_short,
+        typing_speed_long,
+        typing_speed,
+    ):
+        for char in line:
+            if random.random() < typo_chance:
+                typo_char = random.choice("abcdefghijklmnopqrstuvwxyz")
+                editor_container.send_keys(typo_char)
+                time.sleep(typing_speed)
+                editor_container.send_keys(Keys.BACKSPACE)
+                time.sleep(typing_speed)
+            editor_container.send_keys(char)
+            time.sleep(random.uniform(typing_speed_short, typing_speed_long))
+        # Handle comment out case:
+        editor_container.send_keys(Keys.SPACE)
+
+        if line.startswith('"""') or line.startswith("'''"):
+            editor_container.send_keys(Keys.CONTROL + Keys.DELETE)
+        time.sleep(typing_speed)
 
     def read_and_highlight_problem(self, read_speed=0.1):
         """Read the problem statement and highlight the keywords."""
@@ -445,6 +494,75 @@ class BeatCodeAutomation:
         self.click_next_button()
         time.sleep(5)
 
+    def got_used_deletio(self):
+        pass
+
+    # def execute_JS_script(self, script):
+    #     with open("editorObserver.js", "r") as f:
+    #         js_code = f.read()
+
+    #     self.driver.execute_script(js_code)
+
+    #     self.driver.execute_Script("startEditorObserver(.cm-line);")
+
+    #     # Monitor changes periodically?
+    #     try:
+    #         while True:
+    #             # Retrieve observed changes from the browser
+    #             changes = self.execute_script("return window.editorChanges;")
+
+    #             if changes: # If changes were detected
+
+    def check_line_deletion(self, code_solution):
+        """_summary_
+
+        Args:
+            editor_container (HTML context): _description_
+            code_solution (list): containing each line of the solution code
+        """
+        try:
+            editor_container = self.wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='textbox']"))
+            )
+            editor_container.send_keys(
+                Keys.PAGE_UP
+            )  # Navigate to the top of the editor
+            time.sleep(0.5)
+
+            print(code_solution)
+
+            for line in code_solution:
+                editor_container.send_keys(Keys.HOME)
+                editor_container.send_keys(Keys.HOME)
+                editor_container.send_keys(Keys.SHIFT + Keys.END)
+                editor_container.send_keys(
+                    Keys.SHIFT + Keys.END
+                )  # Select the whole line
+                editor_container.send_keys(Keys.CONTROL + "c")  # Copy the line
+                time.sleep(1)
+                current_line = str(pyperclip.paste())  # Get the copied line
+                print("minhdz", current_line, "inside the code")
+                print("ducxdz", line + " ", "ground truth")
+
+                # We add " " in the end of the sentence to avoid the suggestion word
+                if current_line != line + " ":
+                    print("Line deletion detected")
+                    # Fix it right away
+                    self.typing_code_into_editor(
+                        line, 0.15, editor_container, 0.01, 0.01, 0.05
+                    )
+
+                else:
+                    editor_container.send_keys(
+                        Keys.CONTROL + Keys.ARROW_RIGHT
+                    )  # Move to the beginning of the line
+                editor_container.send_keys(
+                    Keys.ARROW_DOWN
+                )  # Move to beginning of the next line
+                time.sleep(1)
+        except Exception as e:
+            print(f"Failed to locate the editor container. Error: {e}")
+
 
 # Example usage:
 if __name__ == "__main__":
@@ -462,12 +580,9 @@ if __name__ == "__main__":
                 os.getenv("USERNAME_BEATCODE"), os.getenv("PASSWORD_BEATCODE")
             )
             time.sleep(2)
-            # Comment out to navigate to custom page
-            # automation.navigate_to_custom()
 
-            # Comment out to navigate to unrank page
+            # Navigate to unrank page
             automation.navigate_to_unrank_page()
-
             automation.check_if_on_game_room()
             time.sleep(2)
 
@@ -475,36 +590,55 @@ if __name__ == "__main__":
 
             while not automation.check_winning_state():
                 try:
-                    automation.read_and_highlight_problem()
-
+                    # Fetch and process the current solution
                     code = automation.fetch_problem_solution(
                         "solutions.json", solution_index
                     )
+                    processedCode = automation.process_raw_solution(code)
 
-                    # automation.thinking(60) # TODO: comment out when deploying
-
-                    automation.input_code_into_editor(code)
+                    # Input the solution into the editor
+                    automation.input_code_into_editor(processedCode.copy())
                     time.sleep(1)
-                    automation.click_submit_program()
-                    time.sleep(2)
 
-                    if automation.check_passing_problem():
-                        print("Passed the problem")
-                        solution_index = 0  # Reset solution index for the next question
-                        automation.click_next_question()
-                        time.sleep(15)
-                    else:
+                    # Attempt to submit up to 3 times
+                    submission_success = False  # Track if submission succeeds
+                    for attempt in range(3):
+                        print(
+                            f"Submission attempt {attempt + 1} for solution {solution_index}"
+                        )
+                        automation.click_submit_program()
+                        time.sleep(2)
+
+                        if automation.check_passing_problem():
+                            print("Passed the problem")
+                            solution_index = (
+                                0  # Reset solution index for the next question
+                            )
+                            automation.click_next_question()
+                            time.sleep(15)
+                            submission_success = True
+                            break  # Exit the retry loop on success
+                        else:
+                            print("Submission failed. Checking for line deletion.")
+                            # TODO: Failed on Restore IP address
+                            automation.check_line_deletion(processedCode.copy())
+                            time.sleep(2)
+
+                    if not submission_success:
                         print(
                             f"Failed to pass the problem with solution index {solution_index}"
                         )
                         solution_index += 1  # Move to the next solution
 
                         # Check if we have exhausted all solutions
-                        if solution_index >= len(
-                            automation.fetch_all_solutions("solutions.json")
-                        ):
+                        total_solutions = len(
+                            automation.fetch_problem_solution(
+                                "solutions.json", solution_index
+                            )
+                        )  # Get the total number of solutions
+                        if solution_index >= total_solutions:
                             print("No more solutions available. Stopping...")
-                            break
+                            break  # End the game
                 except Exception as e:
                     print(f"Encountered an exception: {e}")
                     break  # End of game
