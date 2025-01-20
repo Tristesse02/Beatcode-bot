@@ -261,26 +261,12 @@ class BeatCodeAutomation:
     def thinking(self, time):
         time.sleep(time)
 
-    # def fix_code_deletio(self, code_solution):
-    #     editor_container = self.wait.until(
-    #         EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='textbox']"))
-    #     )
-    #     editor_container.click()
-    #     time.sleep(1)
-
-    #     editor_container.send_keys(Keys.PAGE_UP)
-    #     time.sleep(0.5)
-
-    #     solution_index = 0
-
-    #     while solution_index < len(code):
-
     def input_code_into_editor(
         self,
         code,
         short_line_threshold=30,
         typing_speed_short=0.05,
-        typing_speed_long=0.05,
+        typing_speed_long=0.3,
         typo_chance=0.15,
     ):
         """
@@ -497,22 +483,6 @@ class BeatCodeAutomation:
     def got_used_deletio(self):
         pass
 
-    # def execute_JS_script(self, script):
-    #     with open("editorObserver.js", "r") as f:
-    #         js_code = f.read()
-
-    #     self.driver.execute_script(js_code)
-
-    #     self.driver.execute_Script("startEditorObserver(.cm-line);")
-
-    #     # Monitor changes periodically?
-    #     try:
-    #         while True:
-    #             # Retrieve observed changes from the browser
-    #             changes = self.execute_script("return window.editorChanges;")
-
-    #             if changes: # If changes were detected
-
     def check_line_deletion(self, code_solution):
         """_summary_
 
@@ -549,7 +519,7 @@ class BeatCodeAutomation:
                     print("Line deletion detected")
                     # Fix it right away
                     self.typing_code_into_editor(
-                        line, 0.15, editor_container, 0.01, 0.01, 0.05
+                        line, 0.15, editor_container, 0.05, 0.3, 0.05
                     )
 
                 else:
